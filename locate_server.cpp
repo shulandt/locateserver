@@ -32,6 +32,13 @@ Nmea nmea[max_clients];
 char clientFileName[] = "/var/www/html/backend_data/servinfo";
 
 //---------------------------------------------------------------------------
+void signal_callback_handler(int signum) {
+   printf("Server stopped\n");
+   remove(clientFileName);
+   // Terminate program
+   exit(signum);
+}
+//---------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
   int master_socket;
@@ -45,7 +52,8 @@ int main(int argc, char *argv[])
   struct timeval tv;
   struct timespec ts; 
   
-  remove(clientFileName);  
+  remove(clientFileName);
+  signal(SIGINT, signal_callback_handler);  
   
   for(int i = 0; i < max_clients; i++) {
     client_socket[i] = 0;
