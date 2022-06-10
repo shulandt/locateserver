@@ -37,11 +37,13 @@ int main(int argc, char *argv[])
   int master_socket;
   int addrlen;
   int client_socket[max_clients];
-  int client_activity[max_clients];
+  long client_activity[max_clients];
   int activity;
   int max_sd;
   struct sockaddr_in servAddr;
   fd_set readfds;               // Set of socket descriptors
+  struct timeval tv;
+  struct timespec ts; 
   
   remove(clientFileName);  
   
@@ -86,6 +88,7 @@ int main(int argc, char *argv[])
 
   while(1)
   {
+    clock_gettime(CLOCK_MONOTONIC, &ts);	  
     // Clear the socket set
     FD_ZERO(&readfds);
     // Add master socket to set
@@ -105,7 +108,9 @@ int main(int argc, char *argv[])
     }
     // Wait for an activity on one of the sockets, timeout is NULL,
     // so wait indefinitely
-    activity = select(max_sd + 1, &readfds, NULL, NULL, NULL);
+    tv.tv_sec = 10;
+    tv.tv_usec = 0;    	
+    activity = select(max_sd + 1, &readfds, NULL, NULL, &tv);
     if(activity < 0)
     {
       printf("Select error");
@@ -129,19 +134,29 @@ int main(int argc, char *argv[])
         if(client_socket[i] == 0)
         {
           client_socket[i] = client_sockfd;
+		  client_activity[i] = ts.tv_sec;
           break;
         }
       }
     }
+	
     // Else its some IO operation on some other socket
     for(int i = 0; i < max_clients; i++)
     {
       int client_sockfd = client_socket[i];
 	  if(client_sockfd == 0)
-		continue;  
+		continue;
+	  // timeout connection check
+      if(ts.tv_sec - client_activity[i] > 10) {
+        printf("Client %s:%d disconnected\n", inet_ntoa(cl_addr.sin_addr), ntohs(cl_addr.sin_port));
+        // Close the socket and mark as 0 in list for reuse
+        close(client_sockfd);
+        client_socket[i] = 0;
+	    remove(clientFileName);	  		  
+	  }		  
       if(FD_ISSET(client_sockfd, &readfds))
       {
-		client_activity[i] = 0;  
+		client_activity[i] = ts.tv_sec;  
         getpeername(client_sockfd, (struct sockaddr*)&cl_addr, (socklen_t*)&addrlen);
         // Read the incoming data
         memset(recvBuf, 0, sizeof(recvBuf));
