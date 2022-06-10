@@ -107,7 +107,7 @@
 			  current_popup.setContent('no data');
 		  }
           else {
-            $('#client_content').html('1 client is connected');			
+            $('#client_content').html('<a href="javascript:client_content_func();">1 client is connected</a>');			
 		    const words = data.split(',');
 		    set_map_coord(words[0], words[1], words[2], words[3], words[4], words[5]);
 		    set_target(words[6], words[7], words[8]);
@@ -116,6 +116,10 @@
 	  });
 	}
 
+    function client_content_func()
+	{
+	  map.setView(current_marker.getLatLng());
+	}	
 	</script>
   </body>
 </html>
