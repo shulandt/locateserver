@@ -29,22 +29,26 @@ socklen_t addrlen = sizeof(cl_addr);
 
 Nmea nmea[max_clients];
 
+char clientFileName[] = "/var/www/html/backend_data/servinfo";
+
 //---------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
   int master_socket;
   int addrlen;
   int client_socket[max_clients];
+  int client_activity[max_clients];
   int activity;
   int max_sd;
   struct sockaddr_in servAddr;
   fd_set readfds;               // Set of socket descriptors
-
-  // Initialization
-  //mkfifo("/tmp/ctrl_pipe",0777);
   
-  for(int i = 0; i < max_clients; i++)
+  remove(clientFileName);  
+  
+  for(int i = 0; i < max_clients; i++) {
     client_socket[i] = 0;
+	client_activity[i] = 0;
+  }	
   srand(time(NULL));
 
   master_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -133,8 +137,11 @@ int main(int argc, char *argv[])
     for(int i = 0; i < max_clients; i++)
     {
       int client_sockfd = client_socket[i];
+	  if(client_sockfd == 0)
+		continue;  
       if(FD_ISSET(client_sockfd, &readfds))
       {
+		client_activity[i] = 0;  
         getpeername(client_sockfd, (struct sockaddr*)&cl_addr, (socklen_t*)&addrlen);
         // Read the incoming data
         memset(recvBuf, 0, sizeof(recvBuf));
@@ -148,7 +155,7 @@ int main(int argc, char *argv[])
 			{
 			  if(!strcmp(nmea[i].getSentenceName(), "GGA"))
 			  {
-				FILE* fpPipe = fopen("/var/www/html/backend_data/servinfo","w");
+				FILE* fpPipe = fopen(clientFileName,"w");
 				if(fpPipe != NULL)
 				{
 				  fprintf(fpPipe, "%f,%f,%d,%d,%d,%d,%f,%f,%d\n", nmea[i].getLatitude(), nmea[i].getLongitude(), nmea[i].getNumSat(),
@@ -169,6 +176,7 @@ int main(int argc, char *argv[])
           // Close the socket and mark as 0 in list for reuse
           close(client_sockfd);
           client_socket[i] = 0;
+	      remove(clientFileName);	  
         }
         else
         {

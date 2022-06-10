@@ -25,6 +25,9 @@
   <div class="section no-pad-bot" id="index-banner">
     <div class="container">
       <h1 class="header center orange-text">Track it</h1>
+	  <div class="row center">
+		  <div id="client_content">No active clients</div>
+      </div>
       <div class="row center">
 		  <div id="map" style="height:560px;"></div>
      </div>
@@ -63,6 +66,8 @@
       var current_popup = L.popup({offset: [4, 0]});
 	  
 	  var target_circle = L.circle([0., 0.], {radius: 1}).addTo(map);
+	  
+	  map.setView(L.latLng(0., 0.), 12);
 	
 	  function set_map_coord(curr_lat, curr_lon, sat, dist, time, battery)
 	  {
@@ -87,7 +92,6 @@
 		target_circle.setLatLng(latLng).setRadius(radius);		
 	  }
 	  
-	  set_map_coord("50.452","30.522");
 	  var intervalId = setInterval(function() {
 		  getCoord();
       }, 1000);
@@ -98,9 +102,16 @@
 		url: 'get_coord.php',
 		cache: false,
 		success: function(data){
-		  const words = data.split(',');
-		  set_map_coord(words[0], words[1], words[2], words[3], words[4], words[5]);
-		  set_target(words[6], words[7], words[8]);
+		  if(data.trim() == 'empty') {
+			  $('#client_content').html('No active clients');
+			  current_popup.setContent('no data');
+		  }
+          else {
+            $('#client_content').html('1 client is connected');			
+		    const words = data.split(',');
+		    set_map_coord(words[0], words[1], words[2], words[3], words[4], words[5]);
+		    set_target(words[6], words[7], words[8]);
+		  }	
 		}
 	  });
 	}

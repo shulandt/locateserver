@@ -9,6 +9,9 @@ function readServInfo()
 	    $content = file_get_contents($ctrlname);
 	    echo $content;
 	}
+	else {
+		echo 'empty';
+	}	
 }
 
 readServInfo();
