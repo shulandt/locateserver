@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-	<title>Site</title>
+	<title>Track it ...</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -30,10 +30,9 @@
       </div>
       <div class="row center">
 		  <div id="map" style="height:560px;"></div>
-     </div>
+     </div>	  
     </div>
   </div>
-
   <footer class="page-footer orange">
       <div class="container">
       Made by <a class="orange-text text-lighten-3" href="http:\\google.com">Anonymous</a>
@@ -107,7 +106,7 @@
 			  current_popup.setContent('no data');
 		  }
           else {
-            $('#client_content').html('<a href="javascript:client_content_func();">1 client is connected</a>');			
+            $('#client_content').html('<a href="javascript:client_content_func();">1 client connected</a>');			
 		    const words = data.split(',');
 		    set_map_coord(words[0], words[1], words[2], words[3], words[4], words[5]);
 		    set_target(words[6], words[7], words[8]);
