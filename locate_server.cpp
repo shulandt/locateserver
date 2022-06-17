@@ -224,7 +224,9 @@ int main(int argc, char *argv[])
         else
         {
           printf("Error receiving data!\n");
-          exit(1);
+          close(client_sockfd);
+          client_socket[i] = 0;
+	      remove(clientFileName);	  
         }
       }
     }
