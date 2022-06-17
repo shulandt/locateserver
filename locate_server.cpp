@@ -247,7 +247,6 @@ void* fileReadThread(void* param) {
 		            continue;
 				sprintf(sendBuf, "$PLEDA,%f,%f,%d", lat, lon, radius);
 				sprintf(sendBuf + strlen(sendBuf), "*%02X\r\n", nmeaCheckSum(sendBuf, strlen(sendBuf)));
-				printf("%s", sendBuf);
 				write(client_sockfd, sendBuf, strlen(sendBuf));
 			}
 			
