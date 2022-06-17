@@ -10,27 +10,31 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <time.h>
+#include <pthread.h>
 
 #include "nmea.h"
+#include "utils.h"
 
 // Server port number
 int listenPort = 5000;
 // input buffer size
 const int inBufSize = (1024 * 4);
 // output buffer size
-//const int outBufSize = (1024 * 4);
+const int outBufSize = 1024;
 // max number of clients
 const int max_clients = 30;    
 
-//uint8_t sendBuf[outBufSize] = {};
+char sendBuf[outBufSize] = {};
 uint8_t recvBuf[inBufSize] = {};
 struct sockaddr_in cl_addr;
 socklen_t addrlen = sizeof(cl_addr);
-
+int client_socket[max_clients];
 Nmea nmea[max_clients];
 
 char clientFileName[] = "/var/www/html/backend_data/servinfo";
-
+char clientReadFileName[] = "/var/www/html/backend_data/to_serv";
+//---------------------------------------------------------------------------
+void* fileReadThread(void* param);
 //---------------------------------------------------------------------------
 void signal_callback_handler(int signum) {
    printf("Server stopped\n");
@@ -43,17 +47,22 @@ int main(int argc, char *argv[])
 {
   int master_socket;
   int addrlen;
-  int client_socket[max_clients];
   long client_activity[max_clients];
   int activity;
   int max_sd;
   struct sockaddr_in servAddr;
   fd_set readfds;               // Set of socket descriptors
   struct timeval tv;
-  struct timespec ts; 
+  struct timespec ts;
+  pthread_t tid;
+  pthread_attr_t attr;
+  
   
   remove(clientFileName);
   signal(SIGINT, signal_callback_handler);  
+  
+  pthread_attr_init(&attr);
+  pthread_create(&tid, &attr, fileReadThread, NULL);
   
   for(int i = 0; i < max_clients; i++) {
     client_socket[i] = 0;
@@ -210,3 +219,29 @@ int main(int argc, char *argv[])
     }
   }
 }
+//-----------------------------------------------------------------------------
+void* fileReadThread(void* param) {
+	while(1) {
+		FILE* fpPipe = fopen(clientReadFileName,"r");
+		if(fpPipe != NULL) {
+			double lat, lon;
+			int radius;
+			fscanf(fpPipe, "%lf,%lf,%d", &lat, &lon, &radius);
+			fclose(fpPipe);
+			remove(clientReadFileName);
+						
+			for(int i = 0; i < max_clients; i++) {
+				int client_sockfd = client_socket[i];
+	            if(client_sockfd == 0)
+		            continue;
+				sprintf(sendBuf, "$PLEDA,%f,%f,%d", lat, lon, radius);
+				sprintf(sendBuf + strlen(sendBuf), "*%02X\r\n", nmeaCheckSum(sendBuf, strlen(sendBuf)));
+				printf("%s", sendBuf);
+				write(client_sockfd, sendBuf, strlen(sendBuf));
+			}
+			
+		}	
+		sleep(1);
+	}	
+}
+//-----------------------------------------------------------------------------
