@@ -237,7 +237,7 @@ void* fileReadThread(void* param) {
 		if(fpPipe != NULL) {
 			double lat, lon;
 			int radius;
-			fscanf(fpPipe, "%lf,%lf,%d", &lat, &lon, &radius);
+			int len = fscanf(fpPipe, "%lf,%lf,%d", &lat, &lon, &radius);
 			fclose(fpPipe);
 			remove(clientReadFileName);
 						
@@ -245,7 +245,10 @@ void* fileReadThread(void* param) {
 				int client_sockfd = client_socket[i];
 	            if(client_sockfd == 0)
 		            continue;
-				sprintf(sendBuf, "$PLEDA,%f,%f,%d", lat, lon, radius);
+				if(len < 3)
+					sprintf(sendBuf, "$PLEDA");
+				else
+				    sprintf(sendBuf, "$PLEDA,%f,%f,%d", lat, lon, radius);
 				sprintf(sendBuf + strlen(sendBuf), "*%02X\r\n", nmeaCheckSum(sendBuf, strlen(sendBuf)));
 				write(client_sockfd, sendBuf, strlen(sendBuf));
 			}

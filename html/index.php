@@ -99,11 +99,12 @@
 		target_circle.setLatLng(e.latlng);
 		target_circle.setStyle({color: '#ff0000', fillcolor: '#aaaa00'});
         target_circle_select = false;
-		putData();
+		putData(1);
       }		  
 	});
 	  
 	map.setView(L.latLng(0., 0.), 12);
+	putData(0);
 	
 	function set_map_coord(curr_lat, curr_lon, sat, dist, time, battery)
 	{
@@ -111,6 +112,7 @@
 	  if(map_first_init)
 	  {
 	    map.setView(latLng, 12);
+		putData(0);
 	    map_first_init = false;
 	  }  
       current_popup.setContent('Lat: <b>' + curr_lat + '</b>' + 
@@ -152,14 +154,15 @@
 	  });
 	}
 	
-	function putData()
+	function putData(req)
 	{
 	  var latLng = target_circle.getLatLng();	
-	  var radius = target_circle.getRadius().trim();  
+	  var radius = target_circle.getRadius();  
 	  $.ajax({
 		type: "POST",  
 		url: 'put_coord.php',
 		data: {
+		  request: req,	
 		  coord:  latLng.lat + ',' + latLng.lng,
 		  radius: radius
 		},
