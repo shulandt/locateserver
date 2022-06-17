@@ -97,7 +97,7 @@
 	  }	
 	  else if(target_circle_select) {  
 		target_circle.setLatLng(e.latlng);
-		target_circle.setStyle({color: '#3388ff', fillcolor: '#3388ff'});
+		target_circle.setStyle({color: '#ff0000', fillcolor: '#aaaa00'});
         target_circle_select = false;
 		putData();
       }		  
@@ -125,7 +125,8 @@
 	function set_target(fix_lat, fix_lon, radius)
 	{
 	  var latLng = L.latLng(fix_lat, fix_lon);
-	  target_circle.setLatLng(latLng).setRadius(radius);		
+	  target_circle.setLatLng(latLng).setRadius(radius);
+      target_circle.setStyle({color: '#3388ff', fillcolor: '#3388ff'});	  
 	}
 	  
 	var intervalId = setInterval(function() { getCoord();}, 1000);
@@ -144,7 +145,8 @@
             $('#client_content').html('<a href="javascript:client_content_func();">1 client connected</a>');			
 		    const words = data.split(',');
 		    set_map_coord(words[0], words[1], words[2], words[3], words[4], words[5]);
-		    set_target(words[6], words[7], words[8]);
+			if(words.length > 6)
+		      set_target(words[6], words[7], words[8]);
 		  }	
 		}
 	  });

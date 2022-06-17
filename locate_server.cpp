@@ -185,7 +185,18 @@ int main(int argc, char *argv[])
           {				
 	        if(nmea[i].decode(recvBuf[j]))
 			{
-			  if(!strcmp(nmea[i].getSentenceName(), "GGA"))
+			  if(!strcmp(nmea[i].getSentenceName(), "EDB"))
+			  {
+				FILE* fpPipe = fopen(clientFileName,"w");
+				if(fpPipe != NULL)
+				{
+				  fprintf(fpPipe, "%f,%f,%d,%d,%d,%d\n", nmea[i].getLatitude(), nmea[i].getLongitude(), nmea[i].getNumSat(),
+				          nmea[i].getDistance(), nmea[i].getTimeToExecute(), nmea[i].getBatteryPercent());
+				  fflush(fpPipe);
+				  fclose(fpPipe);
+                }				
+			  }
+			  if(!strcmp(nmea[i].getSentenceName(), "EDA"))
 			  {
 				FILE* fpPipe = fopen(clientFileName,"w");
 				if(fpPipe != NULL)
@@ -196,7 +207,7 @@ int main(int argc, char *argv[])
 				  fflush(fpPipe);
 				  fclose(fpPipe);
                 }				
-			  } 	  				  
+			  } 	  				  			  
             } 				
             //putchar(recvBuf[j]);
           }
