@@ -104,7 +104,6 @@
 	});
 	  
 	map.setView(L.latLng(0., 0.), 12);
-	putData(0);
 	
 	function set_map_coord(curr_lat, curr_lon, sat, dist, time, battery)
 	{
