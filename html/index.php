@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="/images/favicon.ico" type="image/x-icon" rel="icon">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">	
 	<link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 	<link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 	<link href="css/leaflet.css" type="text/css" rel="stylesheet" media="screen,projection"/>
@@ -80,22 +81,13 @@
     var current_popup = L.popup({offset: [4, 0]});
 	  
 	var target_circle = L.circle([0., 0.], {radius: 1}).addTo(map);
+	var target_popup = L.popup({offset: [0, 0]});
 	  
 	var target_circle_click  = false;
 	var target_circle_select = false;
 
-    target_circle.on("click", function(e) {
-	  if(!target_circle_select)  
-        target_circle_click = true;		
-	});
-
     map.on("click", function(e) {
-	  if(target_circle_click) {
-		target_circle_click  = false;	
-		target_circle_select = true;
-        target_circle.setStyle({color: '#aa0000', fillcolor: '#aa0000'});		  
-	  }	
-	  else if(target_circle_select) {  
+	  if(target_circle_select) {  
 		target_circle.setLatLng(e.latlng);
 		target_circle.setStyle({color: '#ff0000', fillcolor: '#aaaa00'});
         target_circle_select = false;
@@ -119,7 +111,8 @@
 						       '<br>Sat: <b>' + sat + '</b>' +
 							   '<br>Distance: <b>' + dist + 'm</b>' +
 							   '<br>Time to: <b>' + time + 's</b>' +
-							   '<br>Battery: <b>' + battery + '%</b>');  
+							   '<br>Battery: <b>' + battery + '%</b>' +
+							   '<br><button name="buttonBoom">Boom!</button>');  
    	  current_marker.setLatLng(latLng).bindPopup(current_popup);
 	}
 	  
@@ -127,7 +120,18 @@
 	{
 	  var latLng = L.latLng(fix_lat, fix_lon);
 	  target_circle.setLatLng(latLng).setRadius(radius);
-      target_circle.setStyle({color: '#3388ff', fillcolor: '#3388ff'});	  
+      target_circle.setStyle({color: '#3388ff', fillcolor: '#3388ff'});
+	  //target_popup.setContent(btnMove);
+	  
+      target_popup.setContent('Lat: <b>' + fix_lat + '</b>' + 
+		                      '<br>Lon: <b>' + fix_lon + '</b>' +
+						      '<br>Radius: <b>' + radius + 'm  </b>' +
+							  '<button name="buttonSetRadius">Set</button>' +
+							  '<br>Time limit: <b>' + 0 + 's  </b>' +
+							  '<button name="buttonSetTime">Set</button>' +
+							  '<br><button name="buttonMove" onClick="target_circle_clk()">Move</button>');
+      							  
+	  target_circle.bindPopup(target_popup);	  
 	}
 	  
 	var intervalId = setInterval(function() { getCoord();}, 1000);
@@ -174,6 +178,14 @@
 	{
 	  map.setView(current_marker.getLatLng());
 	}
+
+    function target_circle_clk()
+	{
+	  target_circle_select = true;
+      target_circle.setStyle({color: '#aa0000', fillcolor: '#aa0000'});
+	  target_popup.close();
+  	}	
+	
 	</script>
   </body>
 </html>
