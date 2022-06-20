@@ -95,6 +95,9 @@
 	  
 	var target_circle_click  = false;
 	var target_circle_select = false;
+	
+	var time_limit = 0;
+	var boom = 0;
 
     map.on("click", function(e) {
 	  if(target_circle_select) {  
@@ -143,12 +146,12 @@
 						 'value=' + radius + '> m </b>' +
 						 '<button name="buttonSetRadius" style="float: right" onClick="target_circle_set_radius()">Set</button>' +
 						 '<br>Time Limit: <b>' +
-                         '<input name="nameTime" ' +
+                         '<input name="nameTime" id="nameTime" ' +
                          'oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" ' +
                          'type = "number" maxlength = "4" min="1" max="9999" ' +
 						 'style="font-size: 14px; width: 40px; height: 18px; border: 1px solid black; border-radius: 2px;" ' + 
-						 'value=' + 5 + '> s </b>' +
-						 '<button name="buttonSetTime">Set</button>' +
+						 'value=' + time_limit + '> s </b>' +
+						 '<button name="buttonSetTime" onClick="target_circle_set_time()">Set</button>' +
 						 '<br><button name="buttonMove" style="width: 100%" onClick="target_circle_clk()">Move</button>';
     	  
       target_popup.setContent(popupContent);
@@ -174,6 +177,8 @@
 		    set_map_coord(words[0], words[1], words[2], words[3], words[4], words[5]);
 			if(words.length > 6)
 		      set_target(words[6], words[7], words[8]);
+		    if(words.length > 9)
+			  time_limit = words[9].trim();
 		  }	
 		}
 	  });
@@ -189,7 +194,9 @@
 		data: {
 		  request: req,	
 		  coord:  latLng.lat + ',' + latLng.lng,
-		  radius: radius
+		  radius: radius,
+		  time: time_limit,
+		  boom: boom
 		},
 		cache: false,
 		success: true	
@@ -215,9 +222,18 @@
       target_circle.setStyle({color: '#ff0000', fillcolor: '#ff0000'});	  
 	  putData(1);
     }
+
+    function target_circle_set_time()
+    {
+      time_limit = document.getElementById('nameTime').value;		
+	  putData(1);
+    }
 	
 	function current_boom()
 	{
+	  boom = 1;
+      putData(1);
+      boom = 0;	  
 	}
 	
 	</script>

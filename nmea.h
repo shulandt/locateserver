@@ -20,6 +20,7 @@ class Nmea {
   double getFixLatitude() {return fixLatitude; }
   double getFixLongitude() {return fixLongitude; }
   int    getFixRadius() {return fixRadius; }
+  int    getTimeLimit() {return timeLimit; }
   
   private:
   char   buff[buffSize];
@@ -38,6 +39,7 @@ class Nmea {
   double fixLatitude;
   double fixLongitude;
   int    fixRadius;
+  int    timeLimit;
   bool   checkSum();
   bool   parse();
   bool   parseGGA();

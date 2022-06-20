@@ -150,6 +150,9 @@ bool Nmea::parsePLEDA() {
         case 3:
           fixRadius = atoi(buff + i + 1);
           break;
+        case 4:
+          timeLimit = atoi(buff + i + 1);
+          break;		  
       }
     }
   }	

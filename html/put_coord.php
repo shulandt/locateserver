@@ -17,6 +17,12 @@ function writeServData()
 		    $content .= ",";
 		    if(isset($_POST['radius']))
 	            $content .= $_POST['radius'];
+			$content .= ",";
+			if(isset($_POST['time']))
+	            $content .= $_POST['time'];			
+			$content .= ",";
+			if(isset($_POST['boom']))
+	            $content .= $_POST['boom'];
         }			
         if(file_put_contents($outfilename, $content) == false)
 	        $info_msg = "error writing data";					

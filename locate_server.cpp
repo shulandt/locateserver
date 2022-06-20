@@ -201,9 +201,9 @@ int main(int argc, char *argv[])
 				FILE* fpPipe = fopen(clientFileName,"w");
 				if(fpPipe != NULL)
 				{
-				  fprintf(fpPipe, "%f,%f,%d,%d,%d,%d,%f,%f,%d\n", nmea[i].getLatitude(), nmea[i].getLongitude(), nmea[i].getNumSat(),
+				  fprintf(fpPipe, "%f,%f,%d,%d,%d,%d,%f,%f,%d,%d\n", nmea[i].getLatitude(), nmea[i].getLongitude(), nmea[i].getNumSat(),
 				          nmea[i].getDistance(), nmea[i].getTimeToExecute(), nmea[i].getBatteryPercent(),
-						  nmea[i].getFixLatitude(), nmea[i].getFixLongitude(), nmea[i].getFixRadius());
+						  nmea[i].getFixLatitude(), nmea[i].getFixLongitude(), nmea[i].getFixRadius(), nmea[i].getTimeLimit());
 				  fflush(fpPipe);
 				  fclose(fpPipe);
                 }				
@@ -239,7 +239,9 @@ void* fileReadThread(void* param) {
 		if(fpPipe != NULL) {
 			double lat, lon;
 			int radius;
-			int len = fscanf(fpPipe, "%lf,%lf,%d", &lat, &lon, &radius);
+			int time_limit;
+			int boom;
+			int len = fscanf(fpPipe, "%lf,%lf,%d,%d,%d", &lat, &lon, &radius, &time_limit, &boom);
 			fclose(fpPipe);
 			remove(clientReadFileName);
 						
@@ -250,7 +252,7 @@ void* fileReadThread(void* param) {
 				if(len < 3)
 					sprintf(sendBuf, "$PLEDA");
 				else
-				    sprintf(sendBuf, "$PLEDA,%f,%f,%d", lat, lon, radius);
+				    sprintf(sendBuf, "$PLEDA,%f,%f,%d,%d,%d", lat, lon, radius, time_limit, boom);
 				sprintf(sendBuf + strlen(sendBuf), "*%02X\r\n", nmeaCheckSum(sendBuf, strlen(sendBuf)));
 				write(client_sockfd, sendBuf, strlen(sendBuf));
 			}
