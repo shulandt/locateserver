@@ -89,7 +89,7 @@
     map.on("click", function(e) {
 	  if(target_circle_select) {  
 		target_circle.setLatLng(e.latlng);
-		target_circle.setStyle({color: '#ff0000', fillcolor: '#aaaa00'});
+		target_circle.setStyle({color: '#ff0000', fillcolor: '#ff0000'});
         target_circle_select = false;
 		putData(1);
       }		  
@@ -125,12 +125,12 @@
       var popupContent = 'Lat: <b>' + fix_lat + '</b>' + 
 		                 '<br>Lon: <b>' + fix_lon + '</b>' +
 						 '<br><label for="nameRadius">Radius: </label>' +
-                         '<input name="nameRadius" ' +
+                         '<input name="nameRadius" id="nameRadius" ' +
                          'oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" ' +
                          'type = "number" maxlength = "4" min="1" max="9999" ' +
 						 'style="font-size: 11px; width: 40px; height: 14px; border: 1px solid black; border-radius: 2px;" ' + 
 						 'value=' + radius + '> m ' +
-						 '<button name="buttonSetRadius" style="float: right">Set</button>' +
+						 '<button name="buttonSetRadius" style="float: right" onClick="target_circle_set_radius()">Set</button>' +
 						 '<br><label for="nameTime">Time Limit: </label>' +
                          '<input name="nameTime" ' +
                          'oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" ' +
@@ -196,6 +196,14 @@
       target_circle.setStyle({color: '#aa0000', fillcolor: '#aa0000'});
 	  target_popup.close();
   	}	
+
+    function target_circle_set_radius()
+    {
+      var radius = document.getElementById('nameRadius').value;		
+	  target_circle.setRadius(radius);
+      target_circle.setStyle({color: '#ff0000', fillcolor: '#ff0000'});	  
+	  putData(1);
+    }
 	
 	</script>
   </body>
