@@ -121,15 +121,26 @@
 	  var latLng = L.latLng(fix_lat, fix_lon);
 	  target_circle.setLatLng(latLng).setRadius(radius);
       target_circle.setStyle({color: '#3388ff', fillcolor: '#3388ff'});
-	  //target_popup.setContent(btnMove);
-	  
-      target_popup.setContent('Lat: <b>' + fix_lat + '</b>' + 
-		                      '<br>Lon: <b>' + fix_lon + '</b>' +
-						      '<br>Radius: <b>' + radius + 'm  </b>' +
-							  '<button name="buttonSetRadius">Set</button>' +
-							  '<br>Time limit: <b>' + 0 + 's  </b>' +
-							  '<button name="buttonSetTime">Set</button>' +
-							  '<br><button name="buttonMove" onClick="target_circle_clk()">Move</button>');
+  
+      var popupContent = 'Lat: <b>' + fix_lat + '</b>' + 
+		                 '<br>Lon: <b>' + fix_lon + '</b>' +
+						 '<br><label for="nameRadius">Radius: </label>' +
+                         '<input name="nameRadius" ' +
+                         'oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" ' +
+                         'type = "number" maxlength = "4" min="1" max="9999" ' +
+						 'style="font-size: 11px; width: 40px; height: 14px; border: 1px solid black; border-radius: 2px;" ' + 
+						 'value=' + radius + '> m ' +
+						 '<button name="buttonSetRadius" style="float: right">Set</button>' +
+						 '<br><label for="nameTime">Time Limit: </label>' +
+                         '<input name="nameTime" ' +
+                         'oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" ' +
+                         'type = "number" maxlength = "4" min="1" max="9999" ' +
+						 'style="font-size: 11px; width: 40px; height: 14px; border: 1px solid black; border-radius: 2px;" ' + 
+						 'value=' + 5 + '> s ' +
+						 '<button name="buttonSetTime">Set</button>' +
+						 '<br><button name="buttonMove" style="width: 100%" onClick="target_circle_clk()">Move</button>';
+    	  
+      target_popup.setContent(popupContent);
       							  
 	  target_circle.bindPopup(target_popup);	  
 	}
