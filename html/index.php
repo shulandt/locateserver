@@ -18,7 +18,11 @@
 			min-height: 500px;
 			width: 100%;
 			border: 1px solid black;
-		}	
+		}
+        .custom-popup .leaflet-popup-tip,
+        .custom-popup .leaflet-popup-content-wrapper {
+            font-size: 14px;
+        }		
 	</style>
 </head>
 <body>
@@ -75,13 +79,19 @@
 	  						   iconUrl: 'data:image/png;base64,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',
 							   iconAnchor: [12, 12]
 							});
-							   
-	var current_marker = L.marker([0., 0.], {icon: marker_icon, zIndexOffset: 10000}).bindPopup('no data').addTo(map);
-
-    var current_popup = L.popup({offset: [4, 0]});
+	
+    var custom_popup_options =
+        {
+          offset: [4, 0],
+          className : 'custom-popup'
+        }
+	
+    var current_popup = L.popup(custom_popup_options);
+	current_popup.setContent('no data');
+	var current_marker = L.marker([0., 0.], {icon: marker_icon, zIndexOffset: 10000}).bindPopup(current_popup).addTo(map);
 	  
 	var target_circle = L.circle([0., 0.], {radius: 1}).addTo(map);
-	var target_popup = L.popup({offset: [0, 0]});
+	var target_popup = L.popup(custom_popup_options);
 	  
 	var target_circle_click  = false;
 	var target_circle_select = false;
@@ -112,7 +122,7 @@
 							   '<br>Distance: <b>' + dist + 'm</b>' +
 							   '<br>Time to: <b>' + time + 's</b>' +
 							   '<br>Battery: <b>' + battery + '%</b>' +
-							   '<br><button name="buttonBoom">Boom!</button>');  
+							   '<br><button name="buttonBoom" style="width: 100%" onClick="current_boom()">Boom!</button>');  
    	  current_marker.setLatLng(latLng).bindPopup(current_popup);
 	}
 	  
@@ -122,21 +132,22 @@
 	  target_circle.setLatLng(latLng).setRadius(radius);
       target_circle.setStyle({color: '#3388ff', fillcolor: '#3388ff'});
   
-      var popupContent = 'Lat: <b>' + fix_lat + '</b>' + 
+      var popupContent = 
+	                     'Lat: <b>' + fix_lat + '</b>' + 
 		                 '<br>Lon: <b>' + fix_lon + '</b>' +
-						 '<br><label for="nameRadius">Radius: </label>' +
+						 '<br>Radius: <b>' +
                          '<input name="nameRadius" id="nameRadius" ' +
                          'oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" ' +
                          'type = "number" maxlength = "4" min="1" max="9999" ' +
-						 'style="font-size: 11px; width: 40px; height: 14px; border: 1px solid black; border-radius: 2px;" ' + 
-						 'value=' + radius + '> m ' +
+						 'style="font-size: 14px; width: 40px; height: 18px; border: 1px solid black; border-radius: 2px;" ' + 
+						 'value=' + radius + '> m </b>' +
 						 '<button name="buttonSetRadius" style="float: right" onClick="target_circle_set_radius()">Set</button>' +
-						 '<br><label for="nameTime">Time Limit: </label>' +
+						 '<br>Time Limit: <b>' +
                          '<input name="nameTime" ' +
                          'oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" ' +
                          'type = "number" maxlength = "4" min="1" max="9999" ' +
-						 'style="font-size: 11px; width: 40px; height: 14px; border: 1px solid black; border-radius: 2px;" ' + 
-						 'value=' + 5 + '> s ' +
+						 'style="font-size: 14px; width: 40px; height: 18px; border: 1px solid black; border-radius: 2px;" ' + 
+						 'value=' + 5 + '> s </b>' +
 						 '<button name="buttonSetTime">Set</button>' +
 						 '<br><button name="buttonMove" style="width: 100%" onClick="target_circle_clk()">Move</button>';
     	  
@@ -204,6 +215,10 @@
       target_circle.setStyle({color: '#ff0000', fillcolor: '#ff0000'});	  
 	  putData(1);
     }
+	
+	function current_boom()
+	{
+	}
 	
 	</script>
   </body>
