@@ -62,6 +62,7 @@
   <script src="js/init.js"></script>
 	
   <script>
+    const max_clients = 1;
     var map_first_init = true;
 	  
 	var map = L.map('map');
@@ -159,13 +160,21 @@
 	  target_circle.bindPopup(target_popup);	  
 	}
 	  
-	var intervalId = setInterval(function() { getCoord();}, 1000);
+	var intervalId = setInterval(function() { getClientsData();}, 1000);
 		
-	function getCoord()
+	function getClientsData()
+    {
+		var i;
+		for(i = 0; i < max_clients; i++) {
+			getClientData(i);
+		}	
+    }		
+	
+	function getClientData(client_num)
 	{
 	  $.ajax({
 		type: "POST",
-		data: {num: zeroPad(0, 2)},	
+		data: {num: zeroPad(client_num, 2)},	
 		url: 'get_coord.php',
 		cache: false,
 		success: function(data){
@@ -174,7 +183,7 @@
 			  current_popup.setContent('no data');
 		  }
           else {
-            $('#client_content').html('<a href="javascript:client_content_func();">1 client connected</a>');			
+            $('#client_content').html('<a href="javascript:client_content_func();">client ' + zeroPad(client_num, 2) + ' connected</a>');			
 		    const words = data.split(',');
 		    set_map_coord(words[0], words[1], words[2], words[3], words[4], words[5]);
 			if(words.length > 6)
