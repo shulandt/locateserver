@@ -164,6 +164,8 @@
 	function getCoord()
 	{
 	  $.ajax({
+		type: "POST",
+		data: {num: zeroPad(0, 2)},	
 		url: 'get_coord.php',
 		cache: false,
 		success: function(data){
@@ -192,7 +194,8 @@
 		type: "POST",  
 		url: 'put_coord.php',
 		data: {
-		  request: req,	
+		  request: req,
+          num: zeroPad(0, 2),		  
 		  coord:  latLng.lat + ',' + latLng.lng,
 		  radius: radius,
 		  time: time_limit,
@@ -235,6 +238,8 @@
       putData(1);
       boom = 0;	  
 	}
+	
+    const zeroPad = (num, places) => String(num).padStart(places, '0');	
 	
 	</script>
   </body>

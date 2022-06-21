@@ -1,6 +1,6 @@
 <?php
 
-$outfilename = "backend_data/to_serv";
+$outfilename = "backend_data/to_client";
 $content = "";
 
 function writeServData()
@@ -23,9 +23,13 @@ function writeServData()
 			$content .= ",";
 			if(isset($_POST['boom']))
 	            $content .= $_POST['boom'];
-        }			
-        if(file_put_contents($outfilename, $content) == false)
-	        $info_msg = "error writing data";					
+        }
+		if(isset($_POST['num'])) {
+			$num = $_POST['num'];
+			$outfilename .= $num;			
+            if(file_put_contents($outfilename, $content) == false)
+	            $info_msg = "error writing data";
+		}	
 	}	
 }
 
