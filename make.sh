@@ -1,0 +1,1 @@
+ g++ locate_server.cpp nmea.cpp utils.cpp -lpthread -o locate_server
