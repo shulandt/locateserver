@@ -31,16 +31,18 @@ socklen_t addrlen = sizeof(cl_addr);
 int client_socket[max_clients];
 Nmea nmea[max_clients];
 
-char clientFileName[] = "/var/www/html/backend_data/servinfo";
-char clientReadFileName[] = "/var/www/html/backend_data/to_serv";
+char fromClientFileName[] = "/var/www/html/backend_data/from_client";
+char toClientFileName[] = "/var/www/html/backend_data/to_client";
 //---------------------------------------------------------------------------
 void* fileReadThread(void* param);
+void removeFromClientFile(int i);
 //---------------------------------------------------------------------------
 void signal_callback_handler(int signum) {
-   printf("Server stopped\n");
-   remove(clientFileName);
-   // Terminate program
-   exit(signum);
+  printf("Server stopped\n");
+  for(int i = 0; i < max_clients; i++) {
+    removeFromClientFile(i);   
+  }
+  exit(signum);
 }
 //---------------------------------------------------------------------------
 int main(int argc, char *argv[])
@@ -57,8 +59,6 @@ int main(int argc, char *argv[])
   pthread_t tid;
   pthread_attr_t attr;
   
-  
-  remove(clientFileName);
   signal(SIGINT, signal_callback_handler);  
   
   pthread_attr_init(&attr);
@@ -67,7 +67,9 @@ int main(int argc, char *argv[])
   for(int i = 0; i < max_clients; i++) {
     client_socket[i] = 0;
 	client_activity[i] = 0;
-  }	
+    removeFromClientFile(i);
+  }
+  
   srand(time(NULL));
 
   master_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -169,8 +171,8 @@ int main(int argc, char *argv[])
         // Close the socket and mark as 0 in list for reuse
         close(client_sockfd);
         client_socket[i] = 0;
-	    remove(clientFileName);	  		  
-	  }		  
+        removeFromClientFile(i);
+  	  }		  
       if(FD_ISSET(client_sockfd, &readfds))
       {
 		client_activity[i] = ts.tv_sec;  
@@ -187,7 +189,9 @@ int main(int argc, char *argv[])
 			{
 			  if(!strcmp(nmea[i].getSentenceName(), "EDB"))
 			  {
-				FILE* fpPipe = fopen(clientFileName,"w");
+    	        char fileName[sizeof(fromClientFileName) + 3];
+	            sprintf(fileName, "%s%02d", fromClientFileName, i);				  
+				FILE* fpPipe = fopen(fileName,"w");
 				if(fpPipe != NULL)
 				{
 				  fprintf(fpPipe, "%f,%f,%d,%d,%d,%d\n", nmea[i].getLatitude(), nmea[i].getLongitude(), nmea[i].getNumSat(),
@@ -198,7 +202,9 @@ int main(int argc, char *argv[])
 			  }
 			  if(!strcmp(nmea[i].getSentenceName(), "EDA"))
 			  {
-				FILE* fpPipe = fopen(clientFileName,"w");
+    	        char fileName[sizeof(fromClientFileName) + 3];
+	            sprintf(fileName, "%s%02d", fromClientFileName, i);				  				  
+				FILE* fpPipe = fopen(fileName,"w");
 				if(fpPipe != NULL)
 				{
 				  fprintf(fpPipe, "%f,%f,%d,%d,%d,%d,%f,%f,%d,%d\n", nmea[i].getLatitude(), nmea[i].getLongitude(), nmea[i].getNumSat(),
@@ -219,46 +225,54 @@ int main(int argc, char *argv[])
           // Close the socket and mark as 0 in list for reuse
           close(client_sockfd);
           client_socket[i] = 0;
-	      remove(clientFileName);	  
-        }
+          removeFromClientFile(i);
+		}
         else
         {
           printf("Error receiving data!\n");
           close(client_sockfd);
           client_socket[i] = 0;
-	      remove(clientFileName);	  
-        }
+          removeFromClientFile(i);        
+		}
       }
     }
   }
 }
 //-----------------------------------------------------------------------------
 void* fileReadThread(void* param) {
-	while(1) {
-		FILE* fpPipe = fopen(clientReadFileName,"r");
-		if(fpPipe != NULL) {
-			double lat, lon;
-			int radius;
-			int time_limit;
-			int boom;
-			int len = fscanf(fpPipe, "%lf,%lf,%d,%d,%d", &lat, &lon, &radius, &time_limit, &boom);
-			fclose(fpPipe);
-			remove(clientReadFileName);
-						
-			for(int i = 0; i < max_clients; i++) {
-				int client_sockfd = client_socket[i];
+	while(1) {						
+		for(int i = 0; i < max_clients; i++) {
+            char fileName[sizeof(toClientFileName) + 3];
+	        sprintf(fileName, "%s%02d", toClientFileName, i);
+			FILE* fpPipe = fopen(fileName,"r");
+		    if(fpPipe != NULL) {
+			    double lat, lon;
+			    int radius;
+			    int time_limit;
+			    int boom;
+			    int len = fscanf(fpPipe, "%lf,%lf,%d,%d,%d", &lat, &lon, &radius, &time_limit, &boom);
+			    fclose(fpPipe);
+	            remove(fileName);	  		  	  		
+				
+			    int client_sockfd = client_socket[i];
 	            if(client_sockfd == 0)
 		            continue;
-				if(len < 3)
-					sprintf(sendBuf, "$PLEDA");
+			    if(len < 3)
+			        sprintf(sendBuf, "$PLEDA");
 				else
 				    sprintf(sendBuf, "$PLEDA,%f,%f,%d,%d,%d", lat, lon, radius, time_limit, boom);
 				sprintf(sendBuf + strlen(sendBuf), "*%02X\r\n", nmeaCheckSum(sendBuf, strlen(sendBuf)));
-				write(client_sockfd, sendBuf, strlen(sendBuf));
+				write(client_sockfd, sendBuf, strlen(sendBuf));	
 			}
 			
 		}	
 		sleep(1);
 	}	
 }
+//-----------------------------------------------------------------------------
+void removeFromClientFile(int i) {
+    char fileName[sizeof(fromClientFileName) + 3];
+	sprintf(fileName, "%s%02d", fromClientFileName, i);
+	remove(fileName);	  		  	  	
+}	
 //-----------------------------------------------------------------------------
