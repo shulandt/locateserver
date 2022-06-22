@@ -42,8 +42,11 @@
     <div class="container">
       <h1 class="header center orange-text">Track it</h1>
 	  <div class="row center">
-		  <div id="client_content">No active clients</div>
+		  <div id="client00_content">client 00 disconnected</div>
       </div>
+	  <div class="row center">
+		  <div id="client01_content">client 01 disconnected</div>
+      </div>	  
 	  <div class="row center">
 		  <div id="map"></div>
 	  </div>
@@ -62,8 +65,8 @@
   <script src="js/init.js"></script>
 	
   <script>
-    const max_clients = 1;
-    var map_first_init = true;
+    const zeroPad = (num, places) => String(num).padStart(places, '0');
+    const max_clients = 2;
 	  
 	var map = L.map('map');
 	  
@@ -87,77 +90,80 @@
           className : 'custom-popup'
         }
 	
-    var current_popup = L.popup(custom_popup_options);
-	current_popup.setContent('no data');
-	var current_marker = L.marker([0., 0.], {icon: marker_icon, zIndexOffset: 10000}).bindPopup(current_popup).addTo(map);
-	  
-	var target_circle = L.circle([0., 0.], {radius: 1}).addTo(map);
-	var target_popup = L.popup(custom_popup_options);
-	  
-	var target_circle_click  = false;
-	var target_circle_select = false;
+	let markerArray = [];
+	let markerPopupArray = [];
+	let targetArray = [];
+	let targetPopupArray = [];
+	var targetSelect = -1;
 	
 	var time_limit = 0;
 	var boom = 0;
 
     map.on("click", function(e) {
-	  if(target_circle_select) {  
-		target_circle.setLatLng(e.latlng);
-		target_circle.setStyle({color: '#ff0000', fillcolor: '#ff0000'});
-        target_circle_select = false;
-		putData(1);
+	  if(targetSelect >= 0) {  
+		targetArray[targetSelect].setLatLng(e.latlng);
+		targetArray[targetSelect].setStyle({color: '#ff0000', fillcolor: '#ff0000'});
+		putData(targetSelect, 1);
+		targetSelect = -1;
       }		  
 	});
 	  
-	map.setView(L.latLng(0., 0.), 12);
+	map_init();
 	
-	function set_map_coord(curr_lat, curr_lon, sat, dist, time, battery)
+	function map_init()
 	{
-	  var latLng = L.latLng(curr_lat, curr_lon);
-	  if(map_first_init)
-	  {
-	    map.setView(latLng, 12);
-		putData(0);
-	    map_first_init = false;
-	  }  
-      current_popup.setContent('Lat: <b>' + curr_lat + '</b>' + 
-		                       '<br>Lon: <b>' + curr_lon + '</b>' +
-						       '<br>Sat: <b>' + sat + '</b>' +
-							   '<br>Distance: <b>' + dist + 'm</b>' +
-							   '<br>Time to: <b>' + time + 's</b>' +
-							   '<br>Battery: <b>' + battery + '%</b>' +
-							   '<br><button name="buttonBoom" style="width: 100%" onClick="current_boom()">Boom!</button>');  
-   	  current_marker.setLatLng(latLng).bindPopup(current_popup);
+		map.setView(L.latLng(0., 0.), 12);
+		var i;
+		for(i = 0; i < max_clients; i++) {
+			markerPopupArray[i] = L.popup(custom_popup_options);
+			markerPopupArray[i].setContent('no data');
+			markerArray[i] = L.marker([0., 0.], {icon: marker_icon, zIndexOffset: 10000}).bindPopup(markerPopupArray[i]).addTo(map);
+			targetPopupArray[i] = L.popup(custom_popup_options);
+			targetArray[i] = L.circle([0., 0.], {radius: 1}).bindPopup(targetPopupArray[i]).addTo(map);
+			putData(i, 0);
+		}			
+	}
+	
+	function set_marker(i, lat, lon, sat, dist, time, battery)
+	{
+	  var latLng = L.latLng(lat, lon);
+	  
+      markerPopupArray[i].setContent('Lat: <b>' + lat + '</b>' + 
+		                             '<br>Lon: <b>' + lon + '</b>' +
+						             '<br>Sat: <b>' + sat + '</b>' +
+							         '<br>Distance: <b>' + dist + 'm</b>' +
+							         '<br>Time to: <b>' + time + 's</b>' +
+							         '<br>Battery: <b>' + battery + '%</b>' +
+							         '<br><button name="buttonBoom" style="width: 100%" onClick="clientBoom(' + i + ')">Boom!</button>');  
+   	  markerArray[i].setLatLng(latLng);
 	}
 	  
-	function set_target(fix_lat, fix_lon, radius)
+	function set_target(i, lat, lon, radius)
 	{
-	  var latLng = L.latLng(fix_lat, fix_lon);
-	  target_circle.setLatLng(latLng).setRadius(radius);
-      target_circle.setStyle({color: '#3388ff', fillcolor: '#3388ff'});
+	  var latLng = L.latLng(lat, lon);
+	  targetArray[i].setLatLng(latLng).setRadius(radius);
+      targetArray[i].setStyle({color: '#3388ff', fillcolor: '#3388ff'});
   
       var popupContent = 
-	                     'Lat: <b>' + fix_lat + '</b>' + 
-		                 '<br>Lon: <b>' + fix_lon + '</b>' +
+	                     'Lat: <b>' + lat + '</b>' + 
+		                 '<br>Lon: <b>' + lon + '</b>' +
 						 '<br>Radius: <b>' +
                          '<input name="nameRadius" id="nameRadius" ' +
                          'oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" ' +
                          'type = "number" maxlength = "4" min="1" max="9999" ' +
 						 'style="font-size: 14px; width: 40px; height: 18px; border: 1px solid black; border-radius: 2px;" ' + 
 						 'value=' + radius + '> m </b>' +
-						 '<button name="buttonSetRadius" style="float: right" onClick="target_circle_set_radius()">Set</button>' +
+						 '<button name="buttonSetRadius" style="float: right" onClick="target_circle_set_radius(' + i + ')">Set</button>' +
 						 '<br>Time Limit: <b>' +
                          '<input name="nameTime" id="nameTime" ' +
                          'oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" ' +
                          'type = "number" maxlength = "4" min="1" max="9999" ' +
 						 'style="font-size: 14px; width: 40px; height: 18px; border: 1px solid black; border-radius: 2px;" ' + 
 						 'value=' + time_limit + '> s </b>' +
-						 '<button name="buttonSetTime" onClick="target_circle_set_time()">Set</button>' +
-						 '<br><button name="buttonMove" style="width: 100%" onClick="target_circle_clk()">Move</button>';
+						 '<button name="buttonSetTime" onClick="target_circle_set_time(' + i + ')">Set</button>' +
+						 '<br><button name="buttonMove" style="width: 100%" onClick="target_circle_clk(' + i + ')">Move</button>';
     	  
-      target_popup.setContent(popupContent);
-      							  
-	  target_circle.bindPopup(target_popup);	  
+      targetPopupArray[i].setContent(popupContent);	  
 	}
 	  
 	var intervalId = setInterval(function() { getClientsData();}, 1000);
@@ -179,15 +185,15 @@
 		cache: false,
 		success: function(data){
 		  if(data.trim() == 'empty') {
-			  $('#client_content').html('No active clients');
-			  current_popup.setContent('no data');
+			  $('#client' + zeroPad(client_num, 2) + '_content').html('client ' + zeroPad(client_num, 2) + 'disconnected');
+			  markerPopupArray[client_num].setContent('no data');
 		  }
           else {
-            $('#client_content').html('<a href="javascript:client_content_func();">client ' + zeroPad(client_num, 2) + ' connected</a>');			
+            $('#client' + zeroPad(client_num, 2) + '_content').html('<a href="javascript:client_content_func(' + client_num + ');">client ' + zeroPad(client_num, 2) + ' connected</a>');			
 		    const words = data.split(',');
-		    set_map_coord(words[0], words[1], words[2], words[3], words[4], words[5]);
+		    set_marker(client_num, words[0], words[1], words[2], words[3], words[4], words[5]);
 			if(words.length > 6)
-		      set_target(words[6], words[7], words[8]);
+		      set_target(client_num, words[6], words[7], words[8]);
 		    if(words.length > 9)
 			  time_limit = words[9].trim();
 		  }	
@@ -195,16 +201,16 @@
 	  });
 	}
 	
-	function putData(req)
+	function putData(client_num, req)
 	{
-	  var latLng = target_circle.getLatLng();	
-	  var radius = target_circle.getRadius();  
+	  var latLng = targetArray[client_num].getLatLng();	
+	  var radius = targetArray[client_num].getRadius();  
 	  $.ajax({
 		type: "POST",  
 		url: 'put_coord.php',
 		data: {
 		  request: req,
-          num: zeroPad(0, 2),		  
+          num: zeroPad(client_num, 2),		  
 		  coord:  latLng.lat + ',' + latLng.lng,
 		  radius: radius,
 		  time: time_limit,
@@ -215,40 +221,38 @@
 	  });		
 	}	
 
-    function client_content_func()
+    function client_content_func(client_num)
 	{
-	  map.setView(current_marker.getLatLng());
+	  map.setView(markerArray[client_num].getLatLng());
 	}
 
-    function target_circle_clk()
+    function target_circle_clk(client_num)
 	{
-	  target_circle_select = true;
-      target_circle.setStyle({color: '#aa0000', fillcolor: '#aa0000'});
-	  target_popup.close();
+	  targetSelect = client_num;	
+      targetArray[client_num].setStyle({color: '#aa0000', fillcolor: '#aa0000'});
+	  targetPopupArray[client_num].close();
   	}	
 
-    function target_circle_set_radius()
+    function target_circle_set_radius(client_num)
     {
       var radius = document.getElementById('nameRadius').value;		
-	  target_circle.setRadius(radius);
-      target_circle.setStyle({color: '#ff0000', fillcolor: '#ff0000'});	  
-	  putData(1);
+	  targetArray[client_num].setRadius(radius);
+      targetArray[client_num].setStyle({color: '#ff0000', fillcolor: '#ff0000'});	  
+	  putData(client_num, 1);
     }
 
-    function target_circle_set_time()
+    function target_circle_set_time(client_num)
     {
       time_limit = document.getElementById('nameTime').value;		
-	  putData(1);
+	  putData(client_num, 1);
     }
 	
-	function current_boom()
+	function clientBoom(client_num)
 	{
 	  boom = 1;
-      putData(1);
+      putData(client_num, 1);
       boom = 0;	  
-	}
-	
-    const zeroPad = (num, places) => String(num).padStart(places, '0');	
+	}	
 	
 	</script>
   </body>
