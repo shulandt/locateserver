@@ -134,6 +134,7 @@
 							         '<br>Distance: <b>' + dist + 'm</b>' +
 							         '<br>Time to: <b>' + time + 's</b>' +
 							         '<br>Battery: <b>' + battery + '%</b>' +
+									 '<br><button name="buttonTarget" style="width: 100%" onClick="targetView(' + i + ')">Target view</button>' +
 							         '<br><button name="buttonBoom" style="width: 100%" onClick="clientBoom(' + i + ')">Boom!</button>');  
    	  markerArray[i].setLatLng(latLng);
 	}
@@ -253,6 +254,13 @@
       putData(client_num, 1);
       boom = 0;	  
 	}	
+
+	function targetView(client_num)
+	{
+      map.setView(targetArray[client_num].getLatLng());
+	  targetArray[client_num].setStyle({color: '#00ff00', fillcolor: '#00ff00'});
+	  markerPopupArray[client_num].close();
+	}
 	
 	</script>
   </body>
