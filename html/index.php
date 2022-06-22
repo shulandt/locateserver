@@ -185,7 +185,7 @@
 		cache: false,
 		success: function(data){
 		  if(data.trim() == 'empty') {
-			  $('#client' + zeroPad(client_num, 2) + '_content').html('client ' + zeroPad(client_num, 2) + 'disconnected');
+			  $('#client' + zeroPad(client_num, 2) + '_content').html('client ' + zeroPad(client_num, 2) + ' disconnected');
 			  markerPopupArray[client_num].setContent('no data');
 		  }
           else {
