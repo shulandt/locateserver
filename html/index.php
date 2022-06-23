@@ -42,6 +42,9 @@
     <div class="container">
       <h1 class="header center orange-text">Track it</h1>
 	  <div class="row center">
+		  <div id="clients_content">Active clients: 0</div>
+      </div>	  
+	  <div class="row center">
 		  <div id="client00_content">client 00 disconnected</div>
       </div>
 	  <div class="row center">
@@ -96,6 +99,7 @@
 	let targetPopupArray = [];
 	let clientPresentArray = [];
 	var targetSelect = -1;
+	var activeClients = 0;
 	
 	var time_limit = 0;
 	var boom = 0;
@@ -132,6 +136,8 @@
 	  
 	  if(clientPresentArray[i] == 0) {
 		  clientPresentArray[i] = 1;
+		  activeClients++;
+		  $('#clients_content').html('Active clients: ' + activeClients);
 		  markerArray[i].addTo(map);
 		  targetArray[i].addTo(map);
 	  }	  
@@ -195,7 +201,10 @@
 		  if(data.trim() == 'empty') {
 			  $('#client' + zeroPad(client_num, 2) + '_content').html('client ' + zeroPad(client_num, 2) + ' disconnected');
 			  if(clientPresentArray[client_num] != 0) {
-				clientPresentArray[client_num] = 0;  
+				clientPresentArray[client_num] = 0;
+				if(activeClients > 0)
+                  activeClients--;
+                $('#clients_content').html('Active clients: ' + activeClients);			  
 			    markerArray[client_num].removeFrom(map);
 				targetArray[client_num].removeFrom(map);
 			  }	
