@@ -94,6 +94,7 @@
 	let markerPopupArray = [];
 	let targetArray = [];
 	let targetPopupArray = [];
+	let clientPresentArray = [];
 	var targetSelect = -1;
 	
 	var time_limit = 0;
@@ -115,11 +116,12 @@
 		map.setView(L.latLng(0., 0.), 12);
 		var i;
 		for(i = 0; i < max_clients; i++) {
+			clientPresentArray[i] = 0;
 			markerPopupArray[i] = L.popup(custom_popup_options);
 			markerPopupArray[i].setContent('no data');
-			markerArray[i] = L.marker([0., 0.], {icon: marker_icon, zIndexOffset: 10000}).bindPopup(markerPopupArray[i]).addTo(map);
+			markerArray[i] = L.marker([0., 0.], {icon: marker_icon, zIndexOffset: 10000}).bindPopup(markerPopupArray[i]);
 			targetPopupArray[i] = L.popup(custom_popup_options);
-			targetArray[i] = L.circle([0., 0.], {radius: 1}).bindPopup(targetPopupArray[i]).addTo(map);
+			targetArray[i] = L.circle([0., 0.], {radius: 1}).bindPopup(targetPopupArray[i]);
 			putData(i, 0);
 		}			
 	}
@@ -128,6 +130,11 @@
 	{
 	  var latLng = L.latLng(lat, lon);
 	  
+	  if(clientPresentArray[i] == 0) {
+		  clientPresentArray[i] = 1;
+		  markerArray[i].addTo(map);
+		  targetArray[i].addTo(map);
+	  }	  
       markerPopupArray[i].setContent('Lat: <b>' + lat + '</b>' + 
 		                             '<br>Lon: <b>' + lon + '</b>' +
 						             '<br>Sat: <b>' + sat + '</b>' +
@@ -187,7 +194,11 @@
 		success: function(data){
 		  if(data.trim() == 'empty') {
 			  $('#client' + zeroPad(client_num, 2) + '_content').html('client ' + zeroPad(client_num, 2) + ' disconnected');
-			  markerPopupArray[client_num].setContent('no data');
+			  if(clientPresentArray[client_num] != 0) {
+				clientPresentArray[client_num] = 0;  
+			    markerArray[client_num].removeFrom(map);
+				targetArray[client_num].removeFrom(map);
+			  }	
 		  }
           else {
             $('#client' + zeroPad(client_num, 2) + '_content').html('<a href="javascript:client_content_func(' + client_num + ');">client ' + zeroPad(client_num, 2) + ' connected</a>');			
