@@ -14,7 +14,7 @@
 			padding: 0;
 			margin:  0;
 		}
-		html, body, #map {
+		#map {
 			min-height: 500px;
 			width: 100%;
 			border: 1px solid black;
@@ -22,7 +22,7 @@
         .custom-popup .leaflet-popup-tip,
         .custom-popup .leaflet-popup-content-wrapper {
             font-size: 14px;
-        }		
+        }
 	</style>
 </head>
 <body>
@@ -43,6 +43,11 @@
       <h1 class="header center orange-text">Track it</h1>
 	  <div class="row center">
 		  <div id="clients_content">Active clients: 0</div>
+      </div>
+	  <div class="input-field col s12">
+          <select name="client_select" id="client_select">
+              <option value="" disabled selected>Choose client</option>
+          </select>		  
       </div>	  
 	  <div class="row center">
 		  <div id="client00_content">client 00 disconnected</div>
@@ -55,6 +60,7 @@
 	  </div>
     </div>
   </div>
+
   <footer class="page-footer orange">
       <div class="container">
       Made by <a class="orange-text text-lighten-3" href="http:\\google.com">Anonymous</a>
@@ -68,6 +74,11 @@
   <script src="js/init.js"></script>
 	
   <script>
+
+	$(document).ready(function(){
+    $('select').formSelect();
+    });
+  
     const zeroPad = (num, places) => String(num).padStart(places, '0');
     const max_clients = 2;
 	  
@@ -103,6 +114,8 @@
 	
 	var time_limit = 0;
 	var boom = 0;
+	
+    const clientSelect = document.querySelector('#client_select');	
 
     map.on("click", function(e) {
 	  if(targetSelect >= 0) {  
@@ -138,6 +151,11 @@
 		  clientPresentArray[i] = 1;
 		  activeClients++;
 		  $('#clients_content').html('Active clients: ' + activeClients);
+    
+	      const option = new Option("Client " + zeroPad(i, 2), zeroPad(i, 2));
+          clientSelect.add(option, undefined);
+		  $('select').formSelect();
+
 		  markerArray[i].addTo(map);
 		  targetArray[i].addTo(map);
 	  }	  
@@ -204,7 +222,9 @@
 				clientPresentArray[client_num] = 0;
 				if(activeClients > 0)
                   activeClients--;
-                $('#clients_content').html('Active clients: ' + activeClients);			  
+                $('#clients_content').html('Active clients: ' + activeClients);	
+                clientSelect.remove(indexByValue(zeroPad(client_num, 2)));
+	    	    $('select').formSelect();
 			    markerArray[client_num].removeFrom(map);
 				targetArray[client_num].removeFrom(map);
 			  }	
@@ -282,6 +302,14 @@
 	  markerPopupArray[client_num].close();
 	}
 	
+    function indexByValue(value) 
+	{	
+      for (var i = 0; i < clientSelect.length; i++) {		
+        if (clientSelect.options[i].value === value)
+          return i;
+      }
+      return undefined;
+    }	
 	</script>
   </body>
 </html>
