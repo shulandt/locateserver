@@ -141,8 +141,8 @@
 							         '<br>Distance: <b>' + dist + 'm</b>' +
 							         '<br>Time to: <b>' + time + 's</b>' +
 							         '<br>Battery: <b>' + battery + '%</b>' +
-									 '<br><button name="buttonTarget" style="width: 100%" onClick="targetView(' + i + ')">Target view</button>' +
-							         '<br><button name="buttonBoom" style="width: 100%" onClick="clientBoom(' + i + ')">Boom!</button>');  
+									 '<br><button class="btn-small" name="buttonTarget" style="width: 100%; pad: 2px" onClick="targetView(' + i + ')">Target view</button>' +
+							         '<br><button class="btn-small" name="buttonBoom" style="width: 100%; pad: 2px" onClick="clientBoom(' + i + ')">Boom!</button>');  
    	  markerArray[i].setLatLng(latLng);
 	}
 	  
@@ -161,15 +161,15 @@
                          'type = "number" maxlength = "4" min="1" max="9999" ' +
 						 'style="font-size: 14px; width: 40px; height: 18px; border: 1px solid black; border-radius: 2px;" ' + 
 						 'value=' + radius + '> m </b>' +
-						 '<button name="buttonSetRadius" style="float: right" onClick="target_circle_set_radius(' + i + ')">Set</button>' +
+						 '<button class="btn-small" name="buttonSetRadius" style="pad: 2px" onClick="target_circle_set_radius(' + i + ')">Set</button>' +
 						 '<br>Time Limit: <b>' +
                          '<input name="nameTime" id="nameTime" ' +
                          'oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" ' +
                          'type = "number" maxlength = "4" min="1" max="9999" ' +
 						 'style="font-size: 14px; width: 40px; height: 18px; border: 1px solid black; border-radius: 2px;" ' + 
 						 'value=' + time_limit + '> s </b>' +
-						 '<button name="buttonSetTime" onClick="target_circle_set_time(' + i + ')">Set</button>' +
-						 '<br><button name="buttonMove" style="width: 100%" onClick="target_circle_clk(' + i + ')">Move</button>';
+						 '<button class="btn-small" name="buttonSetTime" style="pad: 2px" onClick="target_circle_set_time(' + i + ')">Set</button>' +
+						 '<br><button class="btn-small" name="buttonMove" style="width: 100%; pad: 2px" onClick="target_circle_clk(' + i + ')">Move</button>';
     	  
       targetPopupArray[i].setContent(popupContent);	  
 	}
