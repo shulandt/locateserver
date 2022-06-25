@@ -10,10 +10,6 @@
 	<link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 	<link href="css/leaflet.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 	<style>
-		body {
-			padding: 0;
-			margin:  0;
-		}
 		#map {
 			min-height: 500px;
 			width: 100%;
@@ -32,22 +28,20 @@
 	<div class="row center">
 	  <div id="clients_content">Active clients: 0</div>
     </div>
-	<div class="input-field col s6">
-      <select name="client_select" id="client_select" style="width: 100px;">
-        <option value="-1" disabled selected>Choose client</option>
-      </select>		  
-	  <button name="buttonBoom" onClick="clientGo()">Go</button>
+	<div class="row center">
+	  <div class="input-field col s6">
+        <select name="client_select" id="client_select">
+          <option value="-1" disabled selected>Choose client</option>
+        </select>		  
+	  </div>
+      <div class="input-field col s6">
+        <button class="waves-effect waves-light btn-large" name="buttonGo" style="width: 100%" onClick="clientGo()">Go</button>	  
+	  </div>
     </div>
 	<div class="row center">
 	  <div id="map"></div>
 	</div>
   </div>
-
-  <footer class="page-footer orange">
-      <div class="container">
-      Made by <a class="orange-text text-lighten-3" href="http:\\google.com">Anonymous</a>
-      </div>
-  </footer>
 
   <!--  Scripts-->
   <script src="js/leaflet.js"></script>
