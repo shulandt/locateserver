@@ -26,39 +26,21 @@
 	</style>
 </head>
 <body>
-  <nav class="light-blue lighten-1" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Logo</a>
-      <ul class="right hide-on-med-and-down">
-        <li><a href="#">Navbar Link</a></li>
-      </ul>
 
-      <ul id="nav-mobile" class="sidenav">
-        <li><a href="#">Navbar Link</a></li>
-      </ul>
-      <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+  <div class="container">
+    <h1 class="header center orange-text">Track it</h1>
+	<div class="row center">
+	  <div id="clients_content">Active clients: 0</div>
     </div>
-  </nav>
-  <div class="section no-pad-bot" id="index-banner">
-    <div class="container">
-      <h1 class="header center orange-text">Track it</h1>
-	  <div class="row center">
-		  <div id="clients_content">Active clients: 0</div>
-      </div>
-	  <div class="input-field col s12">
-          <select name="client_select" id="client_select">
-              <option value="" disabled selected>Choose client</option>
-          </select>		  
-      </div>	  
-	  <div class="row center">
-		  <div id="client00_content">client 00 disconnected</div>
-      </div>
-	  <div class="row center">
-		  <div id="client01_content">client 01 disconnected</div>
-      </div>	  
-	  <div class="row center">
-		  <div id="map"></div>
-	  </div>
+	<div class="input-field col s6">
+      <select name="client_select" id="client_select" style="width: 100px;">
+        <option value="-1" disabled selected>Choose client</option>
+      </select>		  
+	  <button name="buttonBoom" onClick="clientGo()">Go</button>
     </div>
+	<div class="row center">
+	  <div id="map"></div>
+	</div>
   </div>
 
   <footer class="page-footer orange">
@@ -80,7 +62,7 @@
     });
   
     const zeroPad = (num, places) => String(num).padStart(places, '0');
-    const max_clients = 2;
+    const max_clients = 30;
 	  
 	var map = L.map('map');
 	  
@@ -152,7 +134,7 @@
 		  activeClients++;
 		  $('#clients_content').html('Active clients: ' + activeClients);
     
-	      const option = new Option("Client " + zeroPad(i, 2), zeroPad(i, 2));
+	      const option = new Option("Client " + zeroPad(i, 2), i);
           clientSelect.add(option, undefined);
 		  $('select').formSelect();
 
@@ -217,20 +199,19 @@
 		cache: false,
 		success: function(data){
 		  if(data.trim() == 'empty') {
-			  $('#client' + zeroPad(client_num, 2) + '_content').html('client ' + zeroPad(client_num, 2) + ' disconnected');
 			  if(clientPresentArray[client_num] != 0) {
 				clientPresentArray[client_num] = 0;
 				if(activeClients > 0)
                   activeClients--;
                 $('#clients_content').html('Active clients: ' + activeClients);	
-                clientSelect.remove(indexByValue(zeroPad(client_num, 2)));
+                clientSelect.remove(indexByValue(client_num));
+				clientSelect.options[0].selected = true;
 	    	    $('select').formSelect();
 			    markerArray[client_num].removeFrom(map);
 				targetArray[client_num].removeFrom(map);
 			  }	
 		  }
           else {
-            $('#client' + zeroPad(client_num, 2) + '_content').html('<a href="javascript:client_content_func(' + client_num + ');">client ' + zeroPad(client_num, 2) + ' connected</a>');			
 		    const words = data.split(',');
 		    set_marker(client_num, words[0], words[1], words[2], words[3], words[4], words[5]);
 			if(words.length > 6)
@@ -305,11 +286,19 @@
     function indexByValue(value) 
 	{	
       for (var i = 0; i < clientSelect.length; i++) {		
-        if (clientSelect.options[i].value === value)
+        if (clientSelect.options[i].value == value)
           return i;
       }
       return undefined;
-    }	
+    }
+
+	function clientGo()
+	{
+	  client_num = clientSelect.options[clientSelect.selectedIndex].value;
+	  console.log(client_num);
+	  if(client_num >= 0)
+	    map.setView(markerArray[client_num].getLatLng());
+	}
 	</script>
   </body>
 </html>
