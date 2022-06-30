@@ -130,7 +130,7 @@
 		}			
 	}
 	
-	function set_marker(i, lat, lon, sat, dist, time, battery)
+	function set_marker(i, imei, lat, lon, sat, dist, time, battery)
 	{
 	  var latLng = L.latLng(lat, lon);
 	  
@@ -146,7 +146,8 @@
 		  markerArray[i].addTo(map);
 		  targetArray[i].addTo(map);
 	  }	  
-      markerPopupArray[i].setContent('Lat: <b>' + lat + '</b>' + 
+      markerPopupArray[i].setContent('<br>IMEI: <b>' + imei + '</b>' +
+	                                 '<br>Lat: <b>' + lat + '</b>' + 
 		                             '<br>Lon: <b>' + lon + '</b>' +
 						             '<br>Sat: <b>' + sat + '</b>' +
 							         '<br>Distance: <b>' + dist + 'm</b>' +
@@ -238,7 +239,7 @@
 		  }
           else {
 		    const words = data.split(',');
-		    set_marker(client_num, words[1], words[2], words[3], words[4], words[5], words[6].trim());
+		    set_marker(client_num, words[0], words[1], words[2], words[3], words[4], words[5], words[6].trim());
 			if(words.length > 6)
 		      set_target(client_num, words[7], words[8], words[9].trim());
 		    if(words.length > 9)
