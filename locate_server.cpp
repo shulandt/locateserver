@@ -207,7 +207,7 @@ int main(int argc, char *argv[])
 				FILE* fpPipe = fopen(fileName,"w");
 				if(fpPipe != NULL)
 				{
-				  fprintf(fpPipe, "%f,%f,%d,%d,%d,%d,%f,%f,%d,%d\n", nmea[i].getLatitude(), nmea[i].getLongitude(), nmea[i].getNumSat(),
+				  fprintf(fpPipe, "%s,%f,%f,%d,%d,%d,%d,%f,%f,%d,%d\n", nmea[i].getImei(), nmea[i].getLatitude(), nmea[i].getLongitude(), nmea[i].getNumSat(),
 				          nmea[i].getDistance(), nmea[i].getTimeToExecute(), nmea[i].getBatteryPercent(),
 						  nmea[i].getFixLatitude(), nmea[i].getFixLongitude(), nmea[i].getFixRadius(), nmea[i].getTimeLimit());
 				  fflush(fpPipe);
