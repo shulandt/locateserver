@@ -5,6 +5,8 @@
 Nmea::Nmea() {
   pos = 0;
   foundBegin = false;
+  name[0] = 0;
+  imei[0] = 0;
 }
 //-----------------------------------------------------------------------------------
 bool Nmea::decode(char sym) {
@@ -51,7 +53,9 @@ bool Nmea::parse() {
       if(!strcmp(name, "EDB"))  
         return parsePLEDB();
       if(!strcmp(name, "EDA"))  
-        return parsePLEDA();  	  	
+        return parsePLEDA(); 
+      if(!strcmp(name, "EDC"))  
+        return parsePLEDC();  	  		
       return true;
     }
   }
@@ -153,6 +157,24 @@ bool Nmea::parsePLEDA() {
         case 4:
           timeLimit = atoi(buff + i + 1);
           break;		  
+      }
+    }
+  }	
+  return true;
+}
+//-----------------------------------------------------------------------------------
+bool Nmea::parsePLEDC() {
+  int numField = 0;
+  for(int i = 1; i < pos; i++) {
+    if(buff[i] == ',') {
+      numField++;
+      if(buff[i + 1] == ',')
+        continue;
+      switch(numField) {
+        case 1:
+		  strncpy(imei, buff + i + 1, 15);
+          imei[15] = 0;		  
+          break;
       }
     }
   }	

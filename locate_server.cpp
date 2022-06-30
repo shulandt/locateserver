@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
 				FILE* fpPipe = fopen(fileName,"w");
 				if(fpPipe != NULL)
 				{
-				  fprintf(fpPipe, "%f,%f,%d,%d,%d,%d\n", nmea[i].getLatitude(), nmea[i].getLongitude(), nmea[i].getNumSat(),
+				  fprintf(fpPipe, "%s,%f,%f,%d,%d,%d,%d\n", nmea[i].getImei(), nmea[i].getLatitude(), nmea[i].getLongitude(), nmea[i].getNumSat(),
 				          nmea[i].getDistance(), nmea[i].getTimeToExecute(), nmea[i].getBatteryPercent());
 				  fflush(fpPipe);
 				  fclose(fpPipe);
@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
 				  fflush(fpPipe);
 				  fclose(fpPipe);
                 }				
-			  } 	  				  			  
+			  }
             } 				
             //putchar(recvBuf[j]);
           }
