@@ -243,7 +243,7 @@
 			if(words.length > 6)
 		      set_target(client_num, words[7], words[8], words[9].trim());
 		    if(words.length > 9)
-			  time_limit = words[9].trim();
+			  time_limit = words[10].trim();
 		  }	
 		}
 	  });
