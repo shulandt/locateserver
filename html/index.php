@@ -139,7 +139,7 @@
 		  activeClients++;
 		  $('#clients_content').html('Active clients: ' + activeClients);
     
-	      const option = new Option("Client " + zeroPad(i, 2), i);
+	      const option = new Option("Client " + zeroPad(i, 2) + " - " + imei, i);
           clientSelect.add(option, undefined);
 		  $('select').formSelect();
 
