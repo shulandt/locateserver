@@ -240,10 +240,10 @@
           else {
 		    const words = data.split(',');
 		    set_marker(client_num, words[0], words[1], words[2], words[3], words[4], words[5], words[6].trim());
-			if(words.length > 6)
+			if(words.length > 7) {
+			  time_limit = words[10];	
 		      set_target(client_num, words[7], words[8], words[9].trim());
-		    if(words.length > 9)
-			  time_limit = words[10].trim();
+			}  
 		  }	
 		}
 	  });
