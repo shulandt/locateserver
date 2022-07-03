@@ -160,6 +160,8 @@
 	  
 	function set_target(i, lat, lon, radius)
 	{
+	  if(i == targetSelect)
+        return;		  
 	  var latLng = L.latLng(lat, lon);
 	  targetArray[i].setLatLng(latLng).setRadius(radius);
       targetArray[i].setStyle({color: '#3388ff', fillcolor: '#3388ff'});
