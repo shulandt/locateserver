@@ -10,4 +10,4 @@
 # Description:       locate server
 ### END INIT INFO
 
-/home/toor/LocServer/locate_server &
+locate_server &
