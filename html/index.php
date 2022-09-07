@@ -240,7 +240,7 @@
                 }
                 else {
                     const words = data.split(',');
-                    if((('?' + words[0]) == paramString) || (paramString == '?0123456789ABCEF')) {
+                    if((('?' + words[0]) == paramString) || (paramString == '?0123456789ABCDEF')) {
                         set_marker(client_num, words[0], words[1], words[2], words[3], words[4], words[5], words[6].trim());
                         if(words.length > 7) {
                             time_limit = words[10].trim();  
