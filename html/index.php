@@ -63,7 +63,7 @@
     const zeroPad = (num, places) => String(num).padStart(places, '0');
     const max_clients = 30;
     const paramString = document.location.search.slice(1);
-    const params = paramString(',');
+    const params = paramString.split(',');
 
     var map = L.map('map');
 
