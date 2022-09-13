@@ -258,7 +258,7 @@ int main(int argc, char *argv[])
                 break;
               }
             }
-            //printf("%02X ", recvBuf[j]);
+            printf("%02X ", recvBuf[j]);
           }
         }
         else if(recvLen == 0)
