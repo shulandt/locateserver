@@ -207,7 +207,7 @@ int main(int argc, char *argv[])
             if(binr[i].decode(recvBuf[j]))
             {
               switch(binr[i].getNum()) {
-                case 0x01:
+                case 0x01: {
                   clientData[i].lat = binr[i].getP01Lat();
                   clientData[i].lon = binr[i].getP01Lon();
                   clientData[i].alt = binr[i].getP01Alt();
@@ -229,12 +229,14 @@ int main(int argc, char *argv[])
                     fflush(fpPipe);
                     fclose(fpPipe);
                   }
-                  break;
-                case 0x02:
+                }
+                break;
+                case 0x02: {
                   strncpy(clientData[i].imei, binr[i].getP02imei(), 15);
                   clientData[i].imei[15] = 0;
-                  break;
-                case 0x03:
+                }
+                break;
+                case 0x03: {
                   clientData[i].fixLat = binr[i].getP03Lat();
                   clientData[i].fixLon = binr[i].getP03Lon();
                   clientData[i].distLim = binr[i].getP03Dist();
@@ -245,13 +247,14 @@ int main(int argc, char *argv[])
                   FILE* fpPipe = fopen(fileName,"w");
                   if(fpPipe != NULL)
                   {
-                    fprintf(fpPipe, "%s,%f,%f,%d,%d,%d,%d,%f,%f,%d,%d\n", clientData[i].imei, clientData[i].lat, clientData[i].lon, clientData[i].sat,
+                    fprintf(fpPipe, "%s,%f,%f,%d,%ld,%d,%d,%f,%f,%d,%d\n", clientData[i].imei, clientData[i].lat, clientData[i].lon, clientData[i].sat,
                             clientData[i].dist, clientData[i].timeToExec, clientData[i].bat,
                             clientData[i].fixLat, clientData[i].fixLon, clientData[i].distLim, clientData[i].timeLim);
                     fflush(fpPipe);
                     fclose(fpPipe);
                   }
-                  break;
+                |
+                break;
               }
             }
             //putchar(recvBuf[j]);
