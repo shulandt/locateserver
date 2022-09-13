@@ -18,7 +18,7 @@
 // Server port number
 int listenPort = 5000;
 // input buffer size
-const int inBufSize = (1024 * 4);
+const int inBufSize = 128;
 // output buffer size
 const int outBufSize = 1024;
 // max number of clients
@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
     // Wait for an activity on one of the sockets, timeout is NULL,
     // so wait indefinitely
     tv.tv_sec = 10;
-    tv.tv_usec = 0;     
+    tv.tv_usec = 0;
     activity = select(max_sd + 1, &readfds, NULL, NULL, &tv);
     if(activity < 0)
     {
@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
       }       
       if(FD_ISSET(client_sockfd, &readfds))
       {
-        client_activity[i] = ts.tv_sec;  
+        client_activity[i] = ts.tv_sec;
         getpeername(client_sockfd, (struct sockaddr*)&cl_addr, (socklen_t*)&addrlen);
         // Read the incoming data
         memset(recvBuf, 0, sizeof(recvBuf));
@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
           { 
             if(binr[i].decode(recvBuf[j]))
             {
-              printf("binr num = %d", binr[i].getNum());
+              printf("binr num = %d\n", binr[i].getNum());
               switch(binr[i].getNum()) {
                 case 0x01: {
                   clientData[i].lat = binr[i].getP01Lat();
@@ -258,7 +258,7 @@ int main(int argc, char *argv[])
                 break;
               }
             }
-            printf("%02X ", recvBuf[j]);
+            //printf("%02X ", recvBuf[j]);
           }
         }
         else if(recvLen == 0)
