@@ -68,7 +68,7 @@ bool Binr::decode(char inChar) {
       }
       if(pos == (rx.buff[2] + 3)) {
         foundA5 = false;
-        if((unsigned char)inChar == crc8((unsigned char)rx.buff, pos))
+        if((unsigned char)inChar == crc8((unsigned char*)rx.buff, pos))
           return true;
         else
           return false;          
