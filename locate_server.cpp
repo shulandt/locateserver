@@ -12,7 +12,6 @@
 #include <time.h>
 #include <pthread.h>
 
-//#include "nmea.h"
 #include "binr.h"
 #include "utils.h"
 
@@ -48,7 +47,6 @@ uint8_t recvBuf[inBufSize] = {};
 struct sockaddr_in cl_addr;
 socklen_t addrlen = sizeof(cl_addr);
 int client_socket[max_clients];
-//Nmea nmea[max_clients];
 Binr binr[max_clients];
 ClientData clientData[max_clients];
 
@@ -210,16 +208,16 @@ int main(int argc, char *argv[])
             {
               switch(binr.getNum()) {
                 case 0x01:
-                  clientData[i].lat = binr.getP01Lat();
-                  clientData[i].lon = binr.getP01Lon();
-                  clientData[i].alt = binr.getP01Alt();
-                  clientData[i].vel = binr.getP01Vel();
-                  clientData[i].sat = binr.getP01Sat();
-                  clientData[i].hdop = binr.getP01Hdop();
-                  clientData[i].fix = binr.getP01Fix();
-                  clientData[i].timeToExec = binr.getP01Time();
-                  clientData[i].dist = binr.getP01Dist();
-                  clientData[i].bat = binr.getP01Bat();
+                  clientData[i].lat = binr[i].getP01Lat();
+                  clientData[i].lon = binr[i].getP01Lon();
+                  clientData[i].alt = binr[i].getP01Alt();
+                  clientData[i].vel = binr[i].getP01Vel();
+                  clientData[i].sat = binr[i].getP01Sat();
+                  clientData[i].hdop = binr[i].getP01Hdop();
+                  clientData[i].fix = binr[i].getP01Fix();
+                  clientData[i].timeToExec = binr[i].getP01Time();
+                  clientData[i].dist = binr[i].getP01Dist();
+                  clientData[i].bat = binr[i].getP01Bat();
 
                   char fileName[sizeof(fromClientFileName) + 3];
                   sprintf(fileName, "%s%02d", fromClientFileName, i);
@@ -233,14 +231,14 @@ int main(int argc, char *argv[])
                   }         
                   break;
                 case 0x02:
-                  strncpy(clientData[i].imei, binr.getP02imei(), 15);
+                  strncpy(clientData[i].imei, binr[i].getP02imei(), 15);
                   clientData[i].imei[15] = 0;
                   break;
                 case 0x03:
-                  clientData[i].fixLat = binr.getP03Lat();
-                  clientData[i].fixLon = binr.getP03Lon();
-                  clientData[i].distLim = binr.getP03Dist();
-                  clientData[i].timeLim = binr.getP03Time();
+                  clientData[i].fixLat = binr[i].getP03Lat();
+                  clientData[i].fixLon = binr[i].getP03Lon();
+                  clientData[i].distLim = binr[i].getP03Dist();
+                  clientData[i].timeLim = binr[i].getP03Time();
 
                   char fileName[sizeof(fromClientFileName) + 3];
                   sprintf(fileName, "%s%02d", fromClientFileName, i);
@@ -256,38 +254,6 @@ int main(int argc, char *argv[])
                   break;
               }
             }
-           /*  
-            if(nmea[i].decode(recvBuf[j]))
-            {
-              if(!strcmp(nmea[i].getSentenceName(), "EDB"))
-              {
-                char fileName[sizeof(fromClientFileName) + 3];
-                sprintf(fileName, "%s%02d", fromClientFileName, i);               
-                FILE* fpPipe = fopen(fileName,"w");
-                if(fpPipe != NULL)
-                {
-                  fprintf(fpPipe, "%s,%f,%f,%d,%d,%d,%d\n", nmea[i].getImei(), nmea[i].getLatitude(), nmea[i].getLongitude(), nmea[i].getNumSat(),
-                          nmea[i].getDistance(), nmea[i].getTimeToExecute(), nmea[i].getBatteryPercent());
-                  fflush(fpPipe);
-                  fclose(fpPipe);
-                }               
-              }
-              if(!strcmp(nmea[i].getSentenceName(), "EDA"))
-              {
-                char fileName[sizeof(fromClientFileName) + 3];
-                sprintf(fileName, "%s%02d", fromClientFileName, i);                               
-                FILE* fpPipe = fopen(fileName,"w");
-                if(fpPipe != NULL)
-                {
-                  fprintf(fpPipe, "%s,%f,%f,%d,%d,%d,%d,%f,%f,%d,%d\n", nmea[i].getImei(), nmea[i].getLatitude(), nmea[i].getLongitude(), nmea[i].getNumSat(),
-                          nmea[i].getDistance(), nmea[i].getTimeToExecute(), nmea[i].getBatteryPercent(),
-                          nmea[i].getFixLatitude(), nmea[i].getFixLongitude(), nmea[i].getFixRadius(), nmea[i].getTimeLimit());
-                  fflush(fpPipe);
-                  fclose(fpPipe);
-                }               
-              }
-            }
-            */
             //putchar(recvBuf[j]);
           }
         }
@@ -334,14 +300,6 @@ void* fileReadThread(void* param) {
                     write(client_sockfd, "\xA5\x5A\x00\x03\x00", 5);
                 else
                     write(client_sockfd, binr[i].getBuff03(lat, lon, radius, time_limit, boom), 18);
-/*
-                if(len < 3)
-                    sprintf(sendBuf, "$PLEDA");
-                else
-                    sprintf(sendBuf, "$PLEDA,%f,%f,%d,%d,%d", lat, lon, radius, time_limit, boom);
-                sprintf(sendBuf + strlen(sendBuf), "*%02X\r\n", nmeaCheckSum(sendBuf, strlen(sendBuf)));
-                write(client_sockfd, sendBuf, strlen(sendBuf));
-*/
             }
         }   
         sleep(1);
