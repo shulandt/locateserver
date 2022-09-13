@@ -8,9 +8,8 @@ Binr::Binr() {
   found5A = false;
 }
 //-----------------------------------------------------------------------------------
-char* Binr::getBuff01(float lat, float lon, short alt, unsigned short vel, unsigned char sat, 
-                      unsigned char hdop, unsigned char fix, unsigned char time, 
-                      long dist, unsigned char bat) {
+char* Binr::getBuff01(float lat, float lon, int16_t alt, uint16_t vel, uint8_t sat, 
+                      uint8_t hdop, uint8_t fix, uint8_t time, int32_t dist, uint8_t bat) {
   tx.p01.begin = 0x01165AA5;
   tx.p01.lat = lat;
   tx.p01.lon = lon;
@@ -34,7 +33,7 @@ char* Binr::getBuff02(const char* imei) {
   return tx.buff;                  
 }
 //-----------------------------------------------------------------------------------
-char* Binr::getBuff03(float lat, float lon, unsigned short dist, unsigned short time, unsigned char relay) {
+char* Binr::getBuff03(float lat, float lon, uint16_t dist, uint16_t time, uint8_t relay) {
   tx.p03.begin = 0x030D5AA5;
   tx.p03.lat = lat;
   tx.p03.lon = lon;
