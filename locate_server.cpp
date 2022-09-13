@@ -206,6 +206,7 @@ int main(int argc, char *argv[])
           { 
             if(binr[i].decode(recvBuf[j]))
             {
+              printf("binr num = %d", binr[i].getNum());
               switch(binr[i].getNum()) {
                 case 0x01: {
                   clientData[i].lat = binr[i].getP01Lat();
@@ -257,7 +258,7 @@ int main(int argc, char *argv[])
                 break;
               }
             }
-            //putchar(recvBuf[j]);
+            //printf("%02X ", recvBuf[j]);
           }
         }
         else if(recvLen == 0)
