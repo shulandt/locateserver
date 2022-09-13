@@ -47,14 +47,14 @@ char* Binr::getBuff03(float lat, float lon, unsigned short dist, unsigned short 
 //-----------------------------------------------------------------------------------
 bool Binr::decode(char inChar) {
   if(!foundA5) {
-    if(inChar == 0xA5) {
+    if(inChar == (char)0xA5) {
       foundA5 = true;
       found5A = false;
       pos = 0;
     }   
   }
   else if(!found5A) {
-    if(inChar == 0x5A)
+    if(inChar == (char)0x5A)
       found5A = true;
     else
       foundA5 = false;    
