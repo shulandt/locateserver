@@ -12,7 +12,7 @@
 #include <time.h>
 #include <pthread.h>
 
-#include "nmea.h"
+//#include "nmea.h"
 #include "binr.h"
 #include "utils.h"
 
@@ -48,7 +48,7 @@ uint8_t recvBuf[inBufSize] = {};
 struct sockaddr_in cl_addr;
 socklen_t addrlen = sizeof(cl_addr);
 int client_socket[max_clients];
-Nmea nmea[max_clients];
+//Nmea nmea[max_clients];
 Binr binr[max_clients];
 ClientData clientData[max_clients];
 

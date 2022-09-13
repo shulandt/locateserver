@@ -6,7 +6,7 @@ BINDIR ?= $(PREFIX)/local/bin
 all: locate_server
 
 locate_server: *.cpp 
-	g++ locate_server.cpp nmea.cpp utils.cpp -lpthread -o locate_server
+	g++ locate_server.cpp binr.cpp utils.cpp -lpthread -o locate_server
 clean:
 	rm -f locate_server
 
