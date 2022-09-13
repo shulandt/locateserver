@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
           { 
             if(binr[i].decode(recvBuf[j]))
             {
-              switch(binr.getNum()) {
+              switch(binr[i].getNum()) {
                 case 0x01:
                   clientData[i].lat = binr[i].getP01Lat();
                   clientData[i].lon = binr[i].getP01Lon();
@@ -224,11 +224,11 @@ int main(int argc, char *argv[])
                   FILE* fpPipe = fopen(fileName,"w");
                   if(fpPipe != NULL)
                   {
-                    fprintf(fpPipe, "%s,%f,%f,%d,%d,%d,%d\n", clientData[i].imei, clientData[i].lat, clientData[i].lon, clientData[i].sat,
+                    fprintf(fpPipe, "%s,%f,%f,%d,%ld,%d,%d\n", clientData[i].imei, clientData[i].lat, clientData[i].lon, clientData[i].sat,
                             clientData[i].dist, clientData[i].timeToExec, clientData[i].bat);
                     fflush(fpPipe);
                     fclose(fpPipe);
-                  }         
+                  }
                   break;
                 case 0x02:
                   strncpy(clientData[i].imei, binr[i].getP02imei(), 15);
