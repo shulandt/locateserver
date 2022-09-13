@@ -22,7 +22,7 @@ char* Binr::getBuff01(float lat, float lon, short alt, unsigned short vel, unsig
   tx.p01.time = time;
   tx.p01.dist = dist;
   tx.p01.bat = bat;
-  tx.p01.crc = crc8(tx.buff, 25);
+  tx.p01.crc = crc8((unsigned char*)tx.buff, 25);
   return tx.buff;                
 }
 //-----------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ char* Binr::getBuff02(const char* imei) {
   tx.p02.begin = 0x02115AA5;
   strncpy(tx.p02.imei, imei, 15);
   tx.p02.imei[15] = 0;
-  tx.p02.crc = crc8(tx.buff, 20);
+  tx.p02.crc = crc8((unsigned char*)tx.buff, 20);
   return tx.buff;                  
 }
 //-----------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ char* Binr::getBuff03(float lat, float lon, unsigned short dist, unsigned short 
   tx.p03.dist = dist;
   tx.p03.time = time;
   tx.p03.relay = relay;
-  tx.p03.crc = crc8(tx.buff, 16);
+  tx.p03.crc = crc8((unsigned char*)tx.buff, 16);
   return tx.buff;                  
 }
 //-----------------------------------------------------------------------------------
