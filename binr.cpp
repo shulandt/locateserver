@@ -34,7 +34,7 @@ char* Binr::getBuff02(const char* imei) {
 }
 //-----------------------------------------------------------------------------------
 char* Binr::getBuff03(float lat, float lon, uint16_t dist, uint16_t time, uint8_t relay) {
-  tx.p03.begin = 0x030D5AA5;
+  tx.p03.begin = 0x030E5AA5;
   tx.p03.lat = lat;
   tx.p03.lon = lon;
   tx.p03.dist = dist;
@@ -65,8 +65,7 @@ bool Binr::decode(char inChar) {
         foundA5 = false;
         return false;
       }
-      if(pos == (rx.buff[2] + 3)) {
-        foundA5 = false;
+      if(pos == (rx.buff[2] + 3)) {        
         if((unsigned char)inChar == crc8((unsigned char*)rx.buff, pos))
           return true; 
         else
