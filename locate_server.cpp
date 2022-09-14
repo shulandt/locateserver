@@ -19,8 +19,6 @@
 int listenPort = 5000;
 // input buffer size
 const int inBufSize = 128;
-// output buffer size
-const int outBufSize = 1024;
 // max number of clients
 const int max_clients = 30;
 
@@ -42,7 +40,6 @@ struct ClientData {
     unsigned short timeLim;
 };
 
-char sendBuf[outBufSize] = {};
 uint8_t recvBuf[inBufSize] = {};
 struct sockaddr_in cl_addr;
 socklen_t addrlen = sizeof(cl_addr);

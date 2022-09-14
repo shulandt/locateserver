@@ -40,7 +40,7 @@ char* Binr::getBuff03(float lat, float lon, uint16_t dist, uint16_t time, uint8_
   tx.p03.dist = dist;
   tx.p03.time = time;
   tx.p03.relay = relay;
-  tx.p03.crc = crc8((unsigned char*)tx.buff, 16);
+  tx.p03.crc = crc8((unsigned char*)tx.buff, 17);
   return tx.buff;                  
 }
 //-----------------------------------------------------------------------------------
@@ -68,9 +68,9 @@ bool Binr::decode(char inChar) {
       if(pos == (rx.buff[2] + 3)) {
         foundA5 = false;
         if((unsigned char)inChar == crc8((unsigned char*)rx.buff, pos))
-          return true;
+          return true; 
         else
-          return false;          
+          return false;             
       }
     }
     rx.buff[pos++] = inChar;
