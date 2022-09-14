@@ -18,7 +18,7 @@
 // Server port number
 int listenPort = 5000;
 // input buffer size
-const int inBufSize = 128;
+const int inBufSize = 64;
 // max number of clients
 const int max_clients = 30;
 
