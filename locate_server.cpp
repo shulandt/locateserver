@@ -203,7 +203,7 @@ int main(int argc, char *argv[])
           { 
             if(binr[i].decode(recvBuf[j]))
             {
-              printf("binr num = %d\n", binr[i].getNum());
+              //printf("binr num = %d\n", binr[i].getNum());
               switch(binr[i].getNum()) {
                 case 0x01: {
                   clientData[i].lat = binr[i].getP01Lat();
@@ -298,7 +298,7 @@ void* fileReadThread(void* param) {
                 if(client_sockfd == 0)
                     continue;
                 if(len < 3)
-                    write(client_sockfd, "\xA5\x5A\x00\x03\x00", 5);
+                    write(client_sockfd, "\xA5\x5A\x01\x03\xEC", 5);
                 else
                     write(client_sockfd, binr[i].getBuff03(lat, lon, radius, time_limit, boom), 18);
             }
