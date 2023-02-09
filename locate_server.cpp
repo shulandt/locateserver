@@ -230,6 +230,10 @@ int main(int argc, char *argv[])
                     fclose(fpPipe);
                   }
                   
+                  time_t rawtime;
+                  struct tm * ptm;
+                  time(&rawtime);
+                  ptm = gmtime(&rawtime);
                   char logFileName[sizeof(directoryName) + 16];
                   sprintf(logFileName, "%s%s", directoryName, clientData[i].imei);
                   FILE* logFile = fopen(logFileName, "a");
@@ -250,7 +254,7 @@ int main(int argc, char *argv[])
                       ew = 'E';
                     char nmeaBuff[130];
                     sprintf(nmeaBuff, "$GPGGA,%02d%02d%02d,%011.6f,%d,%012.6f,%c,%d,%d,%03.1f,%d,M,,M,,*",
-                            0, 0, 0, lat, ns, lon, ew, clientData[i].fix, clientData[i].sat, clientData[i].hdop / 10.f,
+                            ptm->tm_hour, ptm->tm_min, ptm->tm_sec, lat, ns, lon, ew, clientData[i].fix, clientData[i].sat, clientData[i].hdop / 10.f,
                             clientData[i].alt);  
                     unsigned char cSum = 0;
                     int k = 1;
@@ -266,7 +270,8 @@ int main(int argc, char *argv[])
                     else
                       rmcStatus = 'V';
                     sprintf(nmeaBuff, "$GPRMC,%02d%02d%02d,%c,%011.6f,%c,%012.6f,%c,%05.1f,,%02d%02d%02d,,,%c*",
-                            0, 0, 0, rmcStatus, lat, ns, lon, ew, clientData[i].vel * 0.1 * 3.6 / 1.852, 0, 0, 0, rmcStatus);                    
+                            ptm->tm_hour, ptm->tm_min, ptm->tm_sec, rmcStatus, lat, ns, lon, ew, 
+                            clientData[i].vel * 0.1 * 3.6 / 1.852, ptm->tm_mday, ptm->tm_mon, ptm->tm_year - 100, rmcStatus);                    
                     cSum = 0;
                     k = 1;
                     while(nmeaBuff[k] != '*')
