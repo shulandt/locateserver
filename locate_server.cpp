@@ -234,8 +234,8 @@ int main(int argc, char *argv[])
                   FILE* logFile = fopen(logFileName, "a");
                   if(logFile) 
                   {
-                    fprintf(logfile, "$GPGGA,*\n");
-                    fprintf(logfile, "$GPRMC,*\n");
+                    fprintf(logFile, "$GPGGA,*\n");
+                    fprintf(logFile, "$GPRMC,*\n");
                     fclose(logFile);
                   }
                 }
