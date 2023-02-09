@@ -271,7 +271,7 @@ int main(int argc, char *argv[])
                       rmcStatus = 'V';
                     sprintf(nmeaBuff, "$GPRMC,%02d%02d%02d,%c,%011.6f,%c,%012.6f,%c,%05.1f,,%02d%02d%02d,,,%c*",
                             ptm->tm_hour, ptm->tm_min, ptm->tm_sec, rmcStatus, lat, ns, lon, ew, 
-                            clientData[i].vel * 0.1 * 3.6 / 1.852, ptm->tm_mday, ptm->tm_mon, ptm->tm_year - 100, rmcStatus);                    
+                            clientData[i].vel * 0.1 * 3.6 / 1.852, ptm->tm_mday, ptm->tm_mon + 1, ptm->tm_year - 100, rmcStatus);                    
                     cSum = 0;
                     k = 1;
                     while(nmeaBuff[k] != '*')
