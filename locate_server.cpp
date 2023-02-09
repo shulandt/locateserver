@@ -249,7 +249,7 @@ int main(int argc, char *argv[])
                     else
                       ew = 'E';
                     char nmeaBuff[130];
-                    sprintf(nmeaBuff, "$GPGGA,%02d%02d%02d,%011.6f,%c,%012.6f,%c,%c,%d,%03.1f,%d,M,,M,,*",
+                    sprintf(nmeaBuff, "$GPGGA,%02d%02d%02d,%011.6f,%d,%012.6f,%c,%c,%d,%03.1f,%d,M,,M,,*",
                             0, 0, 0, lat, ns, lon, ew, clientData[i].fix, clientData[i].sat, clientData[i].hdop / 10.f,
                             clientData[i].alt);                    
                     fprintf(logFile, "%s\n", nmeaBuff);
@@ -258,7 +258,7 @@ int main(int argc, char *argv[])
                       rmcStatus = 'A';
                     else
                       rmcStatus = 'V';
-                    sprintf(nmeaBuff, "$GPRMC,%02d%02d%02d,%c,%011.6f,%c,%012.6f,%c,%05.1f,,%02d%02d%02d,,,%c**",
+                    sprintf(nmeaBuff, "$GPRMC,%02d%02d%02d,%c,%011.6f,%c,%012.6f,%c,%05.1f,,%02d%02d%02d,,,%c*",
                             0, 0, 0, rmcStatus, lat, ns, lon, ew, clientData[i].vel * 0.1 * 3.6 / 1.852, 0, 0, 0, rmcStatus);                    
                     fprintf(logFile, "%s\n", nmeaBuff);
                     fclose(logFile);
