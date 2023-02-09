@@ -249,7 +249,7 @@ int main(int argc, char *argv[])
                     else
                       ew = 'E';
                     char nmeaBuff[130];
-                    sprintf(nmeaBuff, "$GPGGA,%02d%02d%02d,%011.6f,%d,%012.6f,%c,%c,%d,%03.1f,%d,M,,M,,*",
+                    sprintf(nmeaBuff, "$GPGGA,%02d%02d%02d,%011.6f,%d,%012.6f,%c,%d,%d,%03.1f,%d,M,,M,,*",
                             0, 0, 0, lat, ns, lon, ew, clientData[i].fix, clientData[i].sat, clientData[i].hdop / 10.f,
                             clientData[i].alt);                    
                     fprintf(logFile, "%s\n", nmeaBuff);
