@@ -231,12 +231,35 @@ int main(int argc, char *argv[])
                   
                   char logFileName[sizeof(directoryName) + 16];
                   sprintf(logFileName, "%s%s", directoryName, clientData[i].imei);
-                  printf("%s\n", logFileName);
                   FILE* logFile = fopen(logFileName, "a");
                   if(logFile) 
                   {
-                    fprintf(logFile, "$GPGGA,*\n");
-                    fprintf(logFile, "$GPRMC,*\n");
+                    float lat = clientData[i].lat;
+                    float lon = clientData[i].lon;
+                    lat = fabs((int)lat + (lat - (int)lat) * 0.6) * 100.;
+                    lon = fabs((int)lon + (lon - (int)lon) * 0.6) * 100.;
+                    char ns, ew;
+                    if(clientData[i].lat < 0)
+                      ns = 'S';
+                    else
+                      ns = 'N';
+                    if(clientData[i].lon < 0)
+                      ew = 'W';
+                    else
+                      ew = 'E';
+                    char nmeaBuff[130];
+                    sprintf(nmeaBuff, "$GPGGA,%02d%02d%02d,%011.6f,%c,%012.6f,%c,%c,%d,%0.f,%.1f,M,,M,,*",
+                            0, 0, 0, lat, ns, lon, ew, clientData[i].fix, clientData[i].sat, clientData[i].hdop,
+                            clientData[i].alt);                    
+                    fprintf(logFile, "%s\n", nmeaBuff);
+                    char rmcStatus;
+                    if(clientData[i].fix)
+                      rmcStatus = 'A';
+                    else
+                      rmcStatus = 'V';
+                    sprintf(nmeaBuff, "$GPRMC,%02d%02d%02d,%c,%011.6f,%c,%012.6f,%c,%05.1f,,%02d%02d%02d,,,%c**",
+                            0, 0, 0, rmcStatus, lat, ns, lon, ew, clientData[i].vel * 3.6 / 1.852, 0, 0, 0, rmcStatus);                    
+                    fprintf(logFile, "%s\n", nmeaBuff);
                     fclose(logFile);
                   }
                 }
