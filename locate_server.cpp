@@ -253,11 +253,11 @@ int main(int argc, char *argv[])
                             0, 0, 0, lat, ns, lon, ew, clientData[i].fix, clientData[i].sat, clientData[i].hdop / 10.f,
                             clientData[i].alt);  
                     unsigned char cSum = 0;
-                    int i = 1;
-                    while(nmeaBuff[i] != '*')
+                    int k = 1;
+                    while(nmeaBuff[k] != '*')
                     {
-                      cSum ^= nmeaBuff[i];
-                      i++;
+                      cSum ^= nmeaBuff[k];
+                      k++;
                     }
                     fprintf(logFile, "%s%02X\r\n", nmeaBuff, cSum);
                     char rmcStatus;
@@ -268,11 +268,11 @@ int main(int argc, char *argv[])
                     sprintf(nmeaBuff, "$GPRMC,%02d%02d%02d,%c,%011.6f,%c,%012.6f,%c,%05.1f,,%02d%02d%02d,,,%c*",
                             0, 0, 0, rmcStatus, lat, ns, lon, ew, clientData[i].vel * 0.1 * 3.6 / 1.852, 0, 0, 0, rmcStatus);                    
                     cSum = 0;
-                    i = 1;
-                    while(nmeaBuff[i] != '*')
+                    k = 1;
+                    while(nmeaBuff[k] != '*')
                     {
-                      cSum ^= nmeaBuff[i];
-                      i++;
+                      cSum ^= nmeaBuff[k];
+                      k++;
                     }
                     fprintf(logFile, "%s%02X\r\n", nmeaBuff, cSum);
 
