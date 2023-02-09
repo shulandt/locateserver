@@ -86,6 +86,7 @@ int main(int argc, char *argv[])
     client_socket[i] = 0;
     client_activity[i] = 0;
     removeFromClientFile(i);
+    clientData[i].imei[0] = 0;
   }
   
   srand(time(NULL));
@@ -235,53 +236,55 @@ int main(int argc, char *argv[])
                   time(&rawtime);
                   ptm = gmtime(&rawtime);
                   char logFileName[sizeof(directoryName) + 16];
-                  sprintf(logFileName, "%s%s", directoryName, clientData[i].imei);
-                  FILE* logFile = fopen(logFileName, "a");
-                  if(logFile) 
-                  {
-                    float lat = clientData[i].lat;
-                    float lon = clientData[i].lon;
-                    lat = fabs((int)lat + (lat - (int)lat) * 0.6) * 100.;
-                    lon = fabs((int)lon + (lon - (int)lon) * 0.6) * 100.;
-                    char ns, ew;
-                    if(clientData[i].lat < 0)
-                      ns = 'S';
-                    else
-                      ns = 'N';
-                    if(clientData[i].lon < 0)
-                      ew = 'W';
-                    else
-                      ew = 'E';
-                    char nmeaBuff[130];
-                    sprintf(nmeaBuff, "$GPGGA,%02d%02d%02d,%011.6f,%d,%012.6f,%c,%d,%d,%03.1f,%d,M,,M,,*",
-                            ptm->tm_hour, ptm->tm_min, ptm->tm_sec, lat, ns, lon, ew, clientData[i].fix, clientData[i].sat, clientData[i].hdop / 10.f,
-                            clientData[i].alt);  
-                    unsigned char cSum = 0;
-                    int k = 1;
-                    while(nmeaBuff[k] != '*')
+                  if(clientData[i].imei[0] != 0) {
+                    sprintf(logFileName, "%s%s", directoryName, clientData[i].imei);
+                    FILE* logFile = fopen(logFileName, "a");
+                    if(logFile) 
                     {
-                      cSum ^= nmeaBuff[k];
-                      k++;
-                    }
-                    fprintf(logFile, "%s%02X\r\n", nmeaBuff, cSum);
-                    char rmcStatus;
-                    if(clientData[i].fix)
-                      rmcStatus = 'A';
-                    else
-                      rmcStatus = 'V';
-                    sprintf(nmeaBuff, "$GPRMC,%02d%02d%02d,%c,%011.6f,%c,%012.6f,%c,%05.1f,,%02d%02d%02d,,,%c*",
-                            ptm->tm_hour, ptm->tm_min, ptm->tm_sec, rmcStatus, lat, ns, lon, ew, 
-                            clientData[i].vel * 0.1 * 3.6 / 1.852, ptm->tm_mday, ptm->tm_mon + 1, ptm->tm_year - 100, rmcStatus);                    
-                    cSum = 0;
-                    k = 1;
-                    while(nmeaBuff[k] != '*')
-                    {
-                      cSum ^= nmeaBuff[k];
-                      k++;
-                    }
-                    fprintf(logFile, "%s%02X\r\n", nmeaBuff, cSum);
+                      float lat = clientData[i].lat;
+                      float lon = clientData[i].lon;
+                      lat = fabs((int)lat + (lat - (int)lat) * 0.6) * 100.;
+                      lon = fabs((int)lon + (lon - (int)lon) * 0.6) * 100.;
+                      char ns, ew;
+                      if(clientData[i].lat < 0)
+                        ns = 'S';
+                      else
+                        ns = 'N';
+                      if(clientData[i].lon < 0)
+                        ew = 'W';
+                      else
+                        ew = 'E';
+                      char nmeaBuff[130];
+                      sprintf(nmeaBuff, "$GPGGA,%02d%02d%02d,%011.6f,%d,%012.6f,%c,%d,%d,%03.1f,%d,M,,M,,*",
+                              ptm->tm_hour, ptm->tm_min, ptm->tm_sec, lat, ns, lon, ew, clientData[i].fix, clientData[i].sat, clientData[i].hdop / 10.f,
+                              clientData[i].alt);  
+                      unsigned char cSum = 0;
+                      int k = 1;
+                      while(nmeaBuff[k] != '*')
+                      {
+                        cSum ^= nmeaBuff[k];
+                        k++;
+                      }
+                      fprintf(logFile, "%s%02X\r\n", nmeaBuff, cSum);
+                      char rmcStatus;
+                      if(clientData[i].fix)
+                        rmcStatus = 'A';
+                      else
+                        rmcStatus = 'V';
+                      sprintf(nmeaBuff, "$GPRMC,%02d%02d%02d,%c,%011.6f,%c,%012.6f,%c,%05.1f,,%02d%02d%02d,,,%c*",
+                              ptm->tm_hour, ptm->tm_min, ptm->tm_sec, rmcStatus, lat, ns, lon, ew, 
+                              clientData[i].vel * 0.1 * 3.6 / 1.852, ptm->tm_mday, ptm->tm_mon + 1, ptm->tm_year - 100, rmcStatus);                    
+                      cSum = 0;
+                      k = 1;
+                      while(nmeaBuff[k] != '*')
+                      {
+                        cSum ^= nmeaBuff[k];
+                        k++;
+                      }
+                      fprintf(logFile, "%s%02X\r\n", nmeaBuff, cSum);
 
-                    fclose(logFile);
+                      fclose(logFile);
+                    }  
                   }
                 }
                 break;
