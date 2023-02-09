@@ -231,6 +231,7 @@ int main(int argc, char *argv[])
                   
                   char logFileName[sizeof(directoryName) + 16];
                   sprintf(logFileName, "%s%s", directoryName, clientData[i].imei);
+                  printf("%s\n", logFileName);
                   FILE* logFile = fopen(logFileName, "a");
                   if(logFile) 
                   {
