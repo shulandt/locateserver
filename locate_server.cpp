@@ -49,6 +49,7 @@ ClientData clientData[max_clients];
 
 char fromClientFileName[] = "/var/www/html/backend_data/from_client";
 char toClientFileName[] = "/var/www/html/backend_data/to_client";
+char directoryName[] = "/var/www/html/backend_data/";
 //---------------------------------------------------------------------------
 void* fileReadThread(void* param);
 void removeFromClientFile(int i);
@@ -226,6 +227,16 @@ int main(int argc, char *argv[])
                             clientData[i].dist, clientData[i].timeToExec, clientData[i].bat);
                     fflush(fpPipe);
                     fclose(fpPipe);
+                  }
+                  
+                  char logFileName[sizeof(directoryName) + 16];
+                  sprintf(logFileName, "%s%s", directoryName, clientData[i].imei);
+                  FILE* logFile = fopen(logFileName, "a");
+                  if(logFile) 
+                  {
+                    fprintf(logfile, "$GPGGA,*\n");
+                    fprintf(logfile, "$GPRMC,*\n");
+                    fclose(logFile);
                   }
                 }
                 break;
