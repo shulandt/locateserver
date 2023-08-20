@@ -19,7 +19,8 @@ $pack_format =
   'salt/'.
   'Sspeed/'.
   'Scourse/'.
-  'Cthrottle/';
+  'Cthrottle/'.
+  'Cvoltage/';
 $array = unpack($pack_format, $bin_data);
 //var_dump($array);
 $time = $array["time"];
@@ -29,12 +30,14 @@ $alt_int = $array["alt"];
 $speed_int = $array["speed"];
 $course_int = $array["course"];
 $throttle = $array["throttle"];
+$voltage_int = $array["voltage"];
 
 $lat = $lat_int / 1e7;
 $lon = $lon_int / 1e7;
 $alt = $alt_int / 10.;
 $speed = $speed_int / 10.;
 $course = $course_int / 10.;
+$voltage = $voltage_int / 10.;
 
 // tranfer file to web
 //$fd = fopen("../locate/backend_data/from_client".$serial, 'w') or die("file open error");
