@@ -131,7 +131,34 @@
             putData(i, 0);
         }
     }
+    // for iridium
+    function set_marker(i, imei, lat, lon, alt, speed, course, throttle, battery, time)
+    {
+        var latLng = L.latLng(lat, lon);
 
+        if(clientPresentArray[i] == 0) {
+            clientPresentArray[i] = 1;
+            activeClients++;
+            $('#clients_content').html('Active clients: ' + activeClients);
+            const option = new Option("Client " + zeroPad(i, 2) + " - " + imei, i);
+            clientSelect.add(option, undefined);
+            $('select').formSelect();
+            markerArray[i].addTo(map);
+        }
+        markerPopupArray[i].setContent('<br>IMEI: <b>' + imei + '</b>' +
+                                       '<br>Lat: <b>' + lat + '</b>' + 
+                                       '<br>Lon: <b>' + lon + '</b>' +
+                                       '<br>Alt: <b>' + alt + 'm</b>' +
+                                       '<br>Speed: <b>' + speed + 'm/s</b>' +
+                                       '<br>Course: <b>' + course + 's</b>' +
+                                       '<br>Throttle: <b>' + throttle + '%</b>' +
+                                       '<br>Battery: <b>' + battery + 'v</b>' +
+                                       '<br>Time: <b>' + time + '</b>');
+        markerArray[i].setLatLng(latLng);
+    }
+    
+/*
+    // for gsm
     function set_marker(i, imei, lat, lon, sat, dist, time, battery)
     {
         var latLng = L.latLng(lat, lon);
@@ -157,7 +184,7 @@
                                        '<br><button class="btn-small" name="buttonBoom" style="width: 100%; pad: 2px" onClick="clientBoom(' + i + ')">Boom!</button>');  
         markerArray[i].setLatLng(latLng);
     }
-
+*/
     function set_target(i, lat, lon, radius)
     {
         if(i == targetSelect)
@@ -244,8 +271,9 @@
                     for (index = 0, len = params.length; index < len; ++index) {
                         const words = data.split(',');
                         if((words[0] == params[index]) || (params[index] == '0123456789ABCDEF')) {
-                            set_marker(client_num, words[0], words[1], words[2], words[3], words[4], words[5], words[6].trim());
-                            if(words.length > 7) {
+                            //set_marker(client_num, words[0], words[1], words[2], words[3], words[4], words[5], words[6].trim());
+                            set_marker(client_num, words[0], words[1], words[2], words[3], words[4], words[5], words[6], words[7], words[8].trim());
+                            if(words.length > 9) {
                                 time_limit = words[10].trim();
                                 set_target(client_num, words[7], words[8], words[9].trim());
                             }
