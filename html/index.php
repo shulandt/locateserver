@@ -150,7 +150,7 @@
                                        '<br>Lon: <b>' + lon + '</b>' +
                                        '<br>Alt: <b>' + alt + 'm</b>' +
                                        '<br>Speed: <b>' + speed + 'm/s</b>' +
-                                       '<br>Course: <b>' + course + 's</b>' +
+                                       '<br>Course: <b>' + course + '</b>' +
                                        '<br>Throttle: <b>' + throttle + '%</b>' +
                                        '<br>Battery: <b>' + battery + 'v</b>' +
                                        '<br>Time: <b>' + time + '</b>');
