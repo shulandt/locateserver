@@ -43,7 +43,17 @@ $time_string = gmdate("H:i:s", $time);
 
 // tranfer file to web
 //$fd = fopen("../locate/backend_data/from_client".$serial, 'w') or die("file open error");
-$fd = fopen("../locate/backend_data/from_client00", 'w') or die("file open error");
+$client_num = "31";
+if($serial == "214532")
+  $client_num = "00";
+else if($serial == "214537")
+  $client_num = "01";
+else if($serial == "216321")
+  $client_num = "02";
+else if($serial == "216328")
+  $client_num = "03";
+
+$fd = fopen("../locate/backend_data/from_client".$client_num, 'w') or die("file open error");
 fprintf($fd, "%s,%09.6f,%010.6f,%.0f,%.1f,%.1f,%d,%.1f,%s", $imei, $lat, $lon, $alt, $speed, $course, $throttle, $voltage, $time_string);
 fclose($fd);
 
