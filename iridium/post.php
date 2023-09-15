@@ -28,7 +28,7 @@ $lat_int = $array["lat"];
 $lon_int = $array["lon"];
 $alt_int = $array["alt"];
 $speed_int = $array["speed"];
-$course_int = $array["course"];
+$course = $array["course"];
 $throttle = $array["throttle"];
 $voltage_int = $array["voltage"];
 
@@ -36,7 +36,6 @@ $lat = $lat_int / 1e7;
 $lon = $lon_int / 1e7;
 $alt = $alt_int / 10.;
 $speed = $speed_int / 10.;
-$course = $course_int / 10.;
 $voltage = $voltage_int / 10.;
 
 $time_string = gmdate("H:i:s", $time);
@@ -54,7 +53,7 @@ else if($serial == "216328")
   $client_num = "03";
 
 $fd = fopen("../locate/backend_data/from_client".$client_num, 'w') or die("file open error");
-fprintf($fd, "%s,%09.6f,%010.6f,%.0f,%.1f,%.1f,%d,%.1f,%s", $imei, $lat, $lon, $alt, $speed, $course, $throttle, $voltage, $time_string);
+fprintf($fd, "%s,%09.6f,%010.6f,%.0f,%.1f,%d,%d,%.1f,%s", $imei, $lat, $lon, $alt, $speed, $course, $throttle, $voltage, $time_string);
 fclose($fd);
 
 // NMEA log
@@ -85,7 +84,7 @@ while($nmea_string[$i] != '*') {
 fprintf($nmea_file, "%s%02X\r\n", $nmea_string, $csum);
 
 $rmc_status = 'A';
-$nmea_string = sprintf("\$GPRMC,%s,%s,%011.6f,%s,%012.6f,%s,%05.1f,%05.1f,%s,,,%s*",
+$nmea_string = sprintf("\$GPRMC,%s,%s,%011.6f,%s,%012.6f,%s,%05.1f,%03d.0,%s,,,%s*",
                        $time_string, $rmc_status, $lat_nmea, $ns, $lon_nmea, $ew, $speed * 3.6 / 1.852, $course,  
                        $date_string, $rmc_status);                    
 $csum = 0;
