@@ -48,9 +48,9 @@ int client_socket[max_clients];
 Binr binr[max_clients];
 ClientData clientData[max_clients];
 
-char fromClientFileName[] = "/var/www/html/backend_data/from_client";
-char toClientFileName[] = "/var/www/html/backend_data/to_client";
-char directoryName[] = "/var/www/html/backend_data/";
+char fromClientFileName[] = "/var/www/html/locate/backend_data/from_client";
+char toClientFileName[] = "/var/www/html/locate/backend_data/to_client";
+char directoryName[] = "/var/www/html/locate/backend_data/";
 //---------------------------------------------------------------------------
 void* fileReadThread(void* param);
 void removeFromClientFile(int i);
