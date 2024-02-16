@@ -20,7 +20,11 @@ $pack_format =
   'Sspeed/'.
   'Scourse/'.
   'Cthrottle/'.
-  'Cvoltage/';
+  'Cvoltage/'.
+  'cpitch/'.
+  'cdummy1/'.
+  'cdummy2/'.
+  'cdummy3/';
 $array = unpack($pack_format, $bin_data);
 //var_dump($array);
 $time = $array["time"];
@@ -31,6 +35,7 @@ $speed_int = $array["speed"];
 $course = $array["course"];
 $throttle = $array["throttle"];
 $voltage_int = $array["voltage"];
+$pitch = $array["pitch"];
 
 $lat = $lat_int / 1e7;
 $lon = $lon_int / 1e7;
@@ -43,17 +48,33 @@ $time_string = gmdate("H:i:s", $time);
 // tranfer file to web
 //$fd = fopen("../locate/backend_data/from_client".$serial, 'w') or die("file open error");
 $client_num = "31";
-if($serial == "214532")
-  $client_num = "00";
-else if($serial == "214537")
+if($serial == "218422")
   $client_num = "01";
-else if($serial == "216321")
+else if($serial == "218343")
   $client_num = "02";
-else if($serial == "216328")
+else if($serial == "218326")
   $client_num = "03";
+else if($serial == "218315")
+  $client_num = "04";
+else if($serial == "218307")
+  $client_num = "05";
+else if($serial == "218314")
+  $client_num = "06";
+else if($serial == "218301")
+  $client_num = "07";
+else if($serial == "218298")
+  $client_num = "08";
+else if($serial == "218305")
+  $client_num = "09";
+else if($serial == "218319")
+  $client_num = "10";
+else if($serial == "218299")
+  $client_num = "11";
+else if($serial == "218329")
+  $client_num = "12";
 
 $fd = fopen("../locate/backend_data/from_client".$client_num, 'w') or die("file open error");
-fprintf($fd, "%s,%09.6f,%010.6f,%.0f,%.1f,%d,%d,%.1f,%s", $imei, $lat, $lon, $alt, $speed, $course, $throttle, $voltage, $time_string);
+fprintf($fd, "%s,%09.6f,%010.6f,%.0f,%.1f,%d,%d,%d,%.1f,%s", $imei, $lat, $lon, $alt, $speed, $course, $pitch, $throttle, $voltage, $time_string);
 fclose($fd);
 
 // NMEA log

@@ -132,7 +132,7 @@
         }
     }
     // for iridium
-    function set_marker(i, imei, lat, lon, alt, speed, course, throttle, battery, time)
+    function set_marker(i, imei, lat, lon, alt, speed, course, pitch, throttle, battery, time)
     {
         var latLng = L.latLng(lat, lon);
 
@@ -151,6 +151,7 @@
                                        '<br>Alt: <b>' + alt + 'm</b>' +
                                        '<br>Speed: <b>' + speed + 'm/s</b>' +
                                        '<br>Course: <b>' + course + '</b>' +
+                                       '<br>Pitch: <b>' + pitch + '</b>' +
                                        '<br>Throttle: <b>' + throttle + '%</b>' +
                                        '<br>Battery: <b>' + battery + 'v</b>' +
                                        '<br>Time: <b>' + time + '</b>');
@@ -272,10 +273,10 @@
                         const words = data.split(',');
                         if((words[0] == params[index]) || (params[index] == '0123456789ABCDEF')) {
                             //set_marker(client_num, words[0], words[1], words[2], words[3], words[4], words[5], words[6].trim());
-                            set_marker(client_num, words[0], words[1], words[2], words[3], words[4], words[5], words[6], words[7], words[8].trim());
-                            if(words.length > 9) {
-                                time_limit = words[10].trim();
-                                set_target(client_num, words[7], words[8], words[9].trim());
+                            set_marker(client_num, words[0], words[1], words[2], words[3], words[4], words[5], words[6], words[7], words[8], words[9].trim());
+                            //if(words.length > 9) {
+                            //    time_limit = words[10].trim();
+                            //    set_target(client_num, words[7], words[8], words[9].trim());
                             }
                         }
                     }
