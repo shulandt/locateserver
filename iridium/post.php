@@ -85,9 +85,9 @@ $date_string = gmdate("dmy", $time);
 
 $ns = 'N';
 $ew = 'E';
-if(lat < 0.)
+if($lat < 0.)
   $ns = 'S';
-if(lon < 0.)
+if($lon < 0.)
   $ew = 'W';
 
 $lat_nmea = abs(floor($lat) + ($lat - floor($lat)) * 0.6) * 100.;
