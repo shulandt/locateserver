@@ -72,6 +72,26 @@ else if($serial == "218299")
   $client_num = "11";
 else if($serial == "218329")
   $client_num = "12";
+else if($serial == "218330")
+  $client_num = "13";
+else if($serial == "218384")
+  $client_num = "14";
+else if($serial == "218318")
+  $client_num = "15";
+else if($serial == "218331")
+  $client_num = "16";
+else if($serial == "218320")
+  $client_num = "17";
+else if($serial == "218349")
+  $client_num = "18";
+else if($serial == "218324")
+  $client_num = "19";
+else if($serial == "218363")
+  $client_num = "20";
+else if($serial == "218357")
+  $client_num = "21";
+else if($serial == "218328")
+  $client_num = "22";
 
 $fd = fopen("../locate/backend_data/from_client".$client_num, 'w') or die("file open error");
 fprintf($fd, "%s,%09.6f,%010.6f,%.0f,%.1f,%d,%d,%d,%.1f,%s", $imei, $lat, $lon, $alt, $speed, $course, $pitch, $throttle, $voltage, $time_string);
